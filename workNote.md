@@ -268,7 +268,7 @@ git config --list
 ## <a id="ssh">SSH</a>
 
 * ssh连接远程服务器
-```
+```bash
 ssh -p 1211 marhal@47.93.45.242
 ```
 
@@ -282,7 +282,7 @@ export LANG=zh_CN.utf-8
 
 ## <a id="Docker">Docker Command</a>
 
-```
+```bash
 # 显示指定的列
 docker ps -a --format "table {{.ID}}\t{{.Names}}\t{{.Ports}}\t{{.Status}}"
 # 日志
@@ -335,7 +335,7 @@ sudo systemctl disable nginx.service
 
 ## <a id="npm">NPM Command</a>
 
-```
+```bash
 # 注册模块镜像
 npm set registry https://registry.npm.taobao.org 
 yarn config set registry https://registry.npm.taobao.org/
@@ -358,7 +358,7 @@ npm cache clean
 
 ## <a id="mongo">MongoDb Command</a>
 
-```
+```bash
 # 连接
 mongo 127.0.0.1:27017
 mongo --host 127.0.0.1 -u "huizhonglianhe" --authenticationDatabase "admin" -p
@@ -436,7 +436,7 @@ composer dump-autoload
 
 * 设置镜像
 
-```
+```bash
 # composer查看全局设置
 composer config -gl
 
