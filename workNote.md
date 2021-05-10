@@ -73,6 +73,8 @@ set global max_allowed_packet = 52428800(1024*1024*50)
 mysqldump -uroot -p  dbname tablename1 tablename2 > tablename.sql
 
 ```
+
+
 ```
 # 导出到xlsx/csv文件
 SELECT * FROM `tablename` into outfile '/var/lib/mysql-files/tablename.xlsx';
@@ -106,6 +108,27 @@ CREATE FULLTXT INDEX ft_idx_name ON `tableNname`(`columnName`) WITH PARSER NGRAM
 SELECT * FROM comments WHERE MATCH (contents) AGAINST ('+47 +90' IN BOOLEAN MODE);
 SELECT * FROM comments WHERE MATCH (contents) AGAINST ('47 90' IN NATURAL LANGUAGE MODE);
 ```
+
+* 查看数据库中那些表有主键
+```
+select t1.table_schema,t1.table_name from information_schema.tables t1 
+left outer join
+information_schema.TABLE_CONSTRAINTS t2   
+on t1.table_schema = t2.TABLE_SCHEMA  and t1.table_name = t2.TABLE_NAME  and t2.CONSTRAINT_NAME in
+('PRIMARY') 
+where t2.table_name is not null and t1.TABLE_SCHEMA not in ('information_schema','performance_schema','test','mysql', 'sys');
+```
+
+* 查看数据库中那些表没有主键
+```
+select t1.table_schema,t1.table_name from information_schema.tables t1 
+left outer join
+information_schema.TABLE_CONSTRAINTS t2   
+on t1.table_schema = t2.TABLE_SCHEMA  and t1.table_name = t2.TABLE_NAME  and t2.CONSTRAINT_NAME in
+('PRIMARY') 
+where t2.table_name is null and t1.TABLE_SCHEMA not in ('information_schema','performance_schema','test','mysql', 'sys');
+```
+
 ## <a id="curl">curl</a>
 
 * 使用POST登录保存cookie文件
@@ -301,6 +324,10 @@ docker rm $(docker ps -qf status=exited)
 docker cp /var/www/html 96f7f14e99ab:/www/
 # 容器文件、文件夹复制到本地
 docker cp  96f7f14e99ab:/www /tmp/
+# 强制删除
+docker rm -f $(docker ps -a -q)
+# 输入多个命令
+docker exec ny-backend-phpfpm bash -c "composer clear && composer update"
 # 容器输入中文
 kubectl exec -it hzlh-mysql-0 -n=hzlh-pre env LANG=C.UTF-8 /bin/bash
 ```
@@ -331,6 +358,17 @@ systemctl list-unit-files --type=service|grep enabled
 ## 关闭开机自启项
 sudo systemctl disable apache2.service
 sudo systemctl disable nginx.service
+## 查看文件前几行
+head -n 10 /test.sql
+## 查看文件后几行
+tail -n 10 /test.sql
+## 将文件的前/后几行输出到指定文件
+head/tail -n 10 /test.sql >> /test10.sql
+## 从第3000行开始，显示1000行（显示3000~3999行）
+cat filename.txt | tail -n +3000 | head -n 1000
+## 显示1000行到3000行
+cat filename.txt | head -n 3000 | tail -n +1000 
+sed -n '1000,3000p' filename.txt
 ```
 
 ## <a id="npm">NPM Command</a>
