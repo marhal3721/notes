@@ -128,6 +128,28 @@ on t1.table_schema = t2.TABLE_SCHEMA  and t1.table_name = t2.TABLE_NAME  and t2.
 ('PRIMARY') 
 where t2.table_name is null and t1.TABLE_SCHEMA not in ('information_schema','performance_schema','test','mysql', 'sys');
 ```
+```
+SELECT
+table_name
+FROM
+    information_schema. TABLES
+WHERE
+    table_schema = 'test'
+AND TABLE_NAME NOT IN (
+    SELECT
+        table_name
+    FROM
+        information_schema.table_constraints t
+    JOIN information_schema.key_column_usage k USING (
+        constraint_name,
+        table_schema,
+        table_name
+    )
+    WHERE
+        t.constraint_type = 'PRIMARY KEY'
+    AND t.table_schema = 'your database name'
+);
+```
 
 ## <a id="curl">curl</a>
 
