@@ -352,6 +352,10 @@ docker rm -f $(docker ps -a -q)
 docker exec ny-backend-phpfpm bash -c "composer clear && composer update"
 # 容器输入中文
 kubectl exec -it hzlh-mysql-0 -n=hzlh-pre env LANG=C.UTF-8 /bin/bash
+# 通过docker-conposer 拉取镜像
+docker pull
+# 重新构建镜像
+docker-compose up -d --force-recreate
 ```
 ## <a id="k8s">k8s Command</a>
 
