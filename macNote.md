@@ -4,7 +4,7 @@
 nohup /Applications/WeChat.app/Contents/MacOS/WeChat > /dev/null 2>&1 &
 ```
 
-## 完全卸载phpstrom
+## 完全卸载phpstorm
 
 ```
 rm /Users/apple/Library/Preferences/jetbrains.*
