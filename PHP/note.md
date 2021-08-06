@@ -40,3 +40,23 @@ protected function downloadFile(string $filePath)
     readfile($filePath);
 }
 ```
+
+##
+
+```php
+protected function getMonth($startTime = 0, $endTime = 0) : array
+{
+    $startTime = $startTime > 0 ? $startTime : time();
+    $endTime = $endTime > 0 ? $endTime : time();
+
+    $startMonth = date('Y-m',$startTime);
+    $months = array();
+    $months[] = $startMonth; // 不需要开始月时不需要此行;
+    while( ($startTime = strtotime('+1 month', $startTime)) <= $endTime){
+        $months[] = date('Y-m',$startTime);
+    }
+
+    return $months;
+}
+
+```
