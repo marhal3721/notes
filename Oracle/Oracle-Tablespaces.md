@@ -3,7 +3,7 @@
 * oarcle数据库真正存放数据的是`数据文件`（data files）
 * Oarcle表空间（tablespaces）是一个逻辑的概念，在物理上是并不存在
 * 把一组data files 放在在一起就成为一个表空间
-<img src='./img/tablespaces.gif'>
+<img src='./img/tablespace.gif'>
 
 ## 表空间属性：
 
