@@ -10,6 +10,8 @@ docker pull deepdiver/docker-oracle-xe-11g
 
 # 安装oracle容器
 docker run -d -p 1521:1521 --name oracle11g deepdiver/docker-oracle-xe-11g
+# 或
+docker run -h "oracle" --name "oracle" -d -p 49160:22 -p 49161:1521 -p 49162:8080 deepdiver/docker-oracle-xe-11g
 
 # 进入容器
 docker exec -it oracle11g bash
