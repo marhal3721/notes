@@ -1,5 +1,6 @@
 * [创建用户](#createUser)
 * [建表](#createTable)
+* [查询所有数据库](#allDatabase)
 * [导出](#exp)
 * [导入](#imp)
 * [表空间扩充](#addTableSapce)
@@ -10,16 +11,70 @@
 
 * 1.创建临时表空间 -- 不需要引号
 ```sql
-create temporary tablespace '临时表空间名' tempfile '临时表空间位置' size 临时表空间大小autoextend on next 100m maxsize 10240m extent management local;
+# create temporary tablespace '临时表空间名' tempfile '临时表空间位置' size 临时表空间大小 autoextend on next 100m maxsize 10240m extent management local;
+
+SQL> create temporary tablespace MH_TMP tempfile '/u01/app/oracle/oradata/XE/MH_temp.dbf' size 1024m autoextend on next 100m maxsize 10240m extent management local;
+
 ```
 * 2.创建数据表空间 -- 不需要引号
 ```sql
-create tablespace '数据表空间名' logging datafile'数据表空间位置' size 1024m autoextend on next 100m maxsize 10240m extent management local;
+# create tablespace '数据表空间名' logging datafile '数据表空间位置' size 1024m autoextend on next 100m maxsize 10240m extent management local;
+
+SQL> create tablespace MH logging datafile '/u01/app/oracle/oradata/XE/MH.dbf' size 1024m autoextend on next 100m maxsize 10240m extent management local;
 ```
 * 3.创建数据库用户并指定表空间
 ```sql
-create user 用户名identified by 用户密码 default tablespace 所指定的表空间名 temporary tablespace 临时表空间名; 
+create user 用户名 identified by 用户密码 default tablespace 所指定的表空间名 temporary tablespace 临时表空间名; 
 ```
+
+* 删除用户
+```sql
+DROP USER MAHAO CASCADE;
+```
+
+* 查看当前登录用户
+```sql
+SQL> select * from v$version;
+SQL> show user
+#  USER is "MAHAO"
+```
+
+## <a id="allDatabase">查询所有数据库</a>
+```sql
+# 查询表空间(需要一定权限)
+select * from v$tablespace;
+
+# 查询当前数据库中所有表名
+select * from user_tables;
+
+# 查询指定表中的所有字段名,表名要全大写
+select column_name from user_tab_columns where table_name = 'STUDENTS';
+
+# 查询指定表中的所有字段名和字段类型,表名要全大写
+select column_name, data_type from user_tab_columns where table_name = 'STUDENTS';
+
+# 查询所有用户的表,视图等
+select * from all_tab_comments;
+
+# 查询本用户的表,视图等
+select * from user_tab_comments;
+
+# 查询所有用户的表的列名和注释
+select * from all_col_comments;
+
+# 查询本用户的表的列名和注释
+select * from user_col_comments;
+
+# 查询所有用户的表的列名等信息
+select * from all_tab_columns;
+
+# 查询本用户的表的列名等信息
+select * from user_tab_columns;
+
+# 查询某用户的表的列名等信息
+select * from all_tab_comments WHERE OWNER = 'MARHAL';
+```
+
 
 ## <a id="createTable">建表demo</a>
 ```sql
