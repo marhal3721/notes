@@ -29,6 +29,7 @@ create user 用户名 identified by 用户密码 default tablespace 所指定的
 
 * 删除用户
 ```sql
+# 如果用户拥有数据表，则不能直接删除，要用上关键字cascade
 DROP USER MAHAO CASCADE;
 ```
 

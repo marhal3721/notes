@@ -1,4 +1,5 @@
-* [Docker](#Docker)
+* [Docker Command](#Docker)
+* [Mac下docker访问主机服务](#MacDocker)
 
 ## <a id="Docker">Docker Command</a>
 
@@ -37,3 +38,12 @@ docker-compose up -d --force-recreate
 # --sig-proxy=false来确保CTRL-D或CTRL-C不会关闭容器
 docker attach --sig-proxy=false mynginx
 ```
+
+## <a id="MacDocker">Mac下docker访问主机服务</a>
+```php
+
+# 将host设置为docker.for.mac.host.internal即可
+# 官方文档：https://docs.docker.com/desktop/mac/networking/
+$connect = oci_connect('MARHAL', '123456', 'docker.for.mac.host.internal:49161/XE', 'UTF8');
+```
+

@@ -19,5 +19,10 @@ cat filename.txt | tail -n +3000 | head -n 1000
 ## 显示1000行到3000行
 cat filename.txt | head -n 3000 | tail -n +1000 
 sed -n '1000,3000p' filename.txt
+
+
+## 查看nohup输出
+
+tail -200f nohup.out
 ```
 
