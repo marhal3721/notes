@@ -21,8 +21,19 @@ cat filename.txt | head -n 3000 | tail -n +1000
 sed -n '1000,3000p' filename.txt
 
 
-## 查看nohup输出
+## nohup
+### 默认输出日志在nohup.out
+nohup [command] & 
+### 指定输出日志文件
+nohup [command] > [logPath] 2>&1 & 
 
-tail -200f nohup.out
+## 查看nohup输出
+tail - 200f nohup.out
+
+## 查看任务
+jobs
+
+## 查看进程
+ps -aux | grep php
 ```
 

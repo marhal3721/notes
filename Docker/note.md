@@ -37,6 +37,15 @@ docker-compose up -d --force-recreate
 # 容器mynginx将访问日志指到标准输出，连接到容器查看访问信息
 # --sig-proxy=false来确保CTRL-D或CTRL-C不会关闭容器
 docker attach --sig-proxy=false mynginx
+
+
+# 删除未运行的容器（正在运行的删除会）
+docker rm $(docker ps -a -q) 
+
+# 删除停止的容器
+docker rm `docker ps -a|grep Exited|awk '{print $1}'`
+docker rm $(docker ps -qf status=exited)
+docker container prune
 ```
 
 ## <a id="MacDocker">Mac下docker访问主机服务</a>
