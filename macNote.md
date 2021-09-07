@@ -72,7 +72,7 @@ lsof -i:4990
 ## 添加环境变量
 
 ```
-~ vim ./.bash_profile
+~ vim ~/.bash_profile
 ```
 
 * export + 自定义名字（GO） = 路径名称
@@ -85,9 +85,21 @@ lsof -i:4990
 ```
 * 生效
 ```
-~ source ./.bash_profile
+~ source ~/.bash_profile
 ```
 * 查看环境变量
 ```
 ~ echo $PATH
+```
+
+## 添加命令别名
+
+```bash
+~ vim ~/.bash_profile
+```
+
+```text
+alias gst='git status'
+alias drmf = 'docker rm -f $(docker ps -a -q)'
+alias drm = 'docker rm -f $(docker ps -a -q)'
 ```
