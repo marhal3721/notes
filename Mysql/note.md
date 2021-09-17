@@ -13,37 +13,37 @@
 ## <a id="mysql">mysql</a>
 
 * <a id="更改字段非空">更改字段非空</a>
-```mysql
+```sql
 ALTER TABLE `tableNname` ALTER COLUMN `columnName` int(11) NOT NULL;
 ```
 * <a id="删除/增加主键">删除/增加主键</a>
-```mysql
+```sql
 ALTER TABLE `tableNname` DROP CONSTRAINT PK_name（主键名字）;
 ```
-```mysql
+```sql
 ALTER TABLE `tableNname` ADD CONSTRAINT PK_name primary key(`columnName`);
 ```
 * <a id="设置主键自增">设置主键自增</a>
-```mysql
+```sql
 ALTER TABLE `tableNname` CHANGE `columnName` `columnName` INT(11) AUTO_INCREMENT;
 ```
 * <a id="添加字段">添加字段</a>
-```mysql
+```sql
 ALTER TABLE `tableNname` ADD `columnName` tinyint(1) NOT NULL DEFULT 1;
 ```
 
 * <a id="添加索引">添加索引</a>
-```mysql
+```sql
 ALTER TABLE `tableNname` ADD INDEX idx_name ( `columnName` )
 ```
 
 * <a id="导入备份数据库">导入备份数据库</a>
-```mysql
+```sql
 source /home/abc/abc.sql;
 ```
 
 * <a id="设置最允许导入值">设置最允许导入值</a>
-```mysql
+```sql
 show global variables like 'max_allowed_packet';
 set global max_allowed_packet = 52428800(1024*1024*50)
 ```
@@ -72,24 +72,24 @@ sudo chown -R mysql:mysql /var/lib/mysql-files/
 
 * <a id="全文索引">全文索引</a> [官方文档](https://dev.mysql.com/doc/refman/5.7/en/fulltext-boolean.html)
     * 查找字符长度受innodb_ft_max_token_size和innodb_ft_min_token_size影响
-```mysql
+```sql
 CREATE FULLTXT INDEX ft_idx_name ON `tableNname`(`columnName`);
 ```
 
 * 全文索引使用 ngram 解释器
     * 查找字符长度受ngram_token_size影响
-```mysql
+```sql
 CREATE FULLTXT INDEX ft_idx_name ON `tableNname`(`columnName`) WITH PARSER NGRAM;
 ```
 
 * 全文索引查询语法
-```mysql
+```sql
 SELECT * FROM comments WHERE MATCH (contents) AGAINST ('+47 +90' IN BOOLEAN MODE);
 SELECT * FROM comments WHERE MATCH (contents) AGAINST ('47 90' IN NATURAL LANGUAGE MODE);
 ```
 
 * 查看数据库中那些表有主键
-```mysql
+```sql
 select t1.table_schema,t1.table_name from information_schema.tables t1 
 left outer join
 information_schema.TABLE_CONSTRAINTS t2   
@@ -99,7 +99,7 @@ where t2.table_name is not null and t1.TABLE_SCHEMA not in ('information_schema'
 ```
 
 * 查看数据库中那些表没有主键
-```mysql
+```sql
 select t1.table_schema,t1.table_name from information_schema.tables t1 
 left outer join
 information_schema.TABLE_CONSTRAINTS t2   
@@ -107,7 +107,7 @@ on t1.table_schema = t2.TABLE_SCHEMA  and t1.table_name = t2.TABLE_NAME  and t2.
 ('PRIMARY') 
 where t2.table_name is null and t1.TABLE_SCHEMA not in ('information_schema','performance_schema','test','mysql', 'sys');
 ```
-```mysql
+```sql
 SELECT
 table_name
 FROM
