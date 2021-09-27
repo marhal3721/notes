@@ -51,7 +51,7 @@ docker container prune
 ## <a id="MacDocker">Mac下docker访问主机服务</a>
 ```php
 
-# 将host设置为docker.for.mac.host.internal即可
+# 将host设置为docker.for.mac.host.internal(host.docker.internal)即可
 # 官方文档：https://docs.docker.com/desktop/mac/networking/
 $connect = oci_connect('MARHAL', '123456', 'docker.for.mac.host.internal:49161/XE', 'UTF8');
 ```

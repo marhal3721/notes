@@ -1,0 +1,231 @@
+
+# Nginx模块上传
+
+## 配置
+
+### 环境
+* Mac
+* Nginx1.21.1
+* php8.0.9(NTS)
+
+
+### 相关文档
+* [nginx-upload-module](https://www.nginx.com/resources/wiki/modules/upload/#upload-set-form-field)
+* [vkholodkov/nginx-upload-module](https://github.com/vkholodkov/nginx-upload-module/tree/2.3.0)
+* [nginx-download](http://nginx.org/download/)
+
+
+### 1.准备
+```bash
+# upload_store散列存储路径
+cd /var/www/html/ \
+&& mkdir -p tmp/0 tmp/1 tmp/2 tmp/3 tmp/4 tmp/5 tmp/6 tmp/7 tmp/8 tmp/9 \
+&& chmod -R 777  /var/www/html/tmp
+
+# php文件存储位置
+cd /var/www/html/ mkdir upload && chmod -R 777  /var/www/html/upload
+
+# 查看nginx原编译
+nginx -V
+
+# 重新编译nginx 
+cd /usr/local/Cellar/nginx/1.21.1/src && https://github.com/vkholodkov/nginx-upload-module.git
+cd nginx源码包目录
+./configure --prefix=/usr/local/Cellar/nginx/1.21.1 \
+--sbin-path=/usr/local/Cellar/nginx/1.21.1/bin/nginx (忽略中间h很多参数) \
+--add-module=/usr/local/Cellar/nginx/1.21.1/src/nginx-upload-module-2.3.0
+```
+
+### 2.nginx配置文件
+```
+server {
+    listen       8889;
+    server_name  127.0.0.1;
+
+    client_max_body_size 400m;
+    client_body_buffer_size 1024k;
+
+    real_ip_header X-Real-IP;
+
+    fastcgi_intercept_errors on;
+    error_page 500 502 503 504  /server/500.html;
+    error_page 404  /server/404.html;
+    
+    root /var/www/html;
+
+    location = /server/500.html {
+        internal;
+    }
+
+    location = /server/404.html {
+        internal;
+    }
+
+    location = /favicon.ico {
+        log_not_found off;
+        access_log off;
+    }
+
+    location ~.*\.(js|css|html|png|jpg)$ {
+            access_log   off;
+    }
+
+    location / {
+        index index.html index.php;
+    
+        #try_files $uri $uri index.php?$args;
+       #try_files $uri $uri/ /index.php?s=$uri&$query_string;
+    }
+
+    location ~ /\. {
+        deny all;
+    }
+
+    location /upload {
+        #后续处理的后端地址。文件中的字段将被分离和取代，包含必要的信息处理上传文件。
+        upload_pass   @test; 
+        # 打开开关，意思就是把前端脚本请求的参数会传给后端的脚本语言，比如：
+        upload_pass_args on;
+        # 指定上传文件存放地址(目录)。目录可以散列，在这种情况下，在nginx启动前，所有的子目录必须存在。
+        upload_store /var/www/html/tmp 1; 
+        # 上传文件的访问权限，user:r是指用户可读
+        upload_store_access user:r; 
+        # 上传软限制 超过此大小的文件会被忽略
+        upload_max_file_size 30m;
+
+
+        # 这里写入http报头，pass到后台页面后能获取这里set的报头字段
+        upload_set_form_field $upload_field_name.name "$upload_file_name";
+        upload_set_form_field $upload_field_name.content_type "$upload_content_type";
+        upload_set_form_field $upload_field_name.path "$upload_tmp_path";
+
+        # Upload模块自动生成的一些信息，如文件大小与文件md5值，会耗费额外的cpu和资源
+        upload_aggregate_form_field "$upload_field_name.md5" "$upload_file_md5";
+        upload_aggregate_form_field "$upload_field_name.size" "$upload_file_size";
+
+        # 允许的字段，允许全部可以 "^.*$"
+        upload_pass_form_field "^submit$|^description$";
+
+        # 每秒字节速度控制，0表示不受控制，默认0, 128K
+        upload_limit_rate 0;
+
+        # 如果pass页面是以下状态码，就删除此次上传的临时文件
+        upload_cleanup 400 404 499 500-505;
+    }
+
+    location @test {
+        proxy_pass   http://$host:$server_port/upload.php;
+    }
+
+    location ~ \.php$ {
+         fastcgi_index  index.php;
+         fastcgi_pass   127.0.0.1:4888;
+         fastcgi_param  SCRIPT_FILENAME $document_root/$fastcgi_script_name;
+         fastcgi_param  REQUEST_ID $request_id;
+         include        /usr/local/etc/nginx/fastcgi_params;
+    }
+    
+    fastcgi_buffers 8 512k;
+    fastcgi_buffer_size 512k;
+    fastcgi_busy_buffers_size 1024k;
+    fastcgi_temp_file_write_size 1024k;
+}
+```
+## html代码
+```html
+<html>
+  <head>
+    <title>Test upload</title>
+  </head>
+  <body>
+    <h2>Select files to upload</h2>
+    <form name="upload" method="POST" enctype="multipart/form-data" action="http://127.0.0.1:8889/upload">
+      <input type="file" name="file1"><br>
+      <input type="submit" name="submit" value="Upload">
+      <input type="hidden" name="test" value="value">
+    </form>
+  </body>
+</html>
+```
+## php代码
+```php
+<?php
+
+header('content-type:text/html;charset=utf-8');
+
+$temppath = $_POST["file1_path"];
+$name = $_POST["file1_name"];
+
+$final_file_path = getPath() ."/{$name}";
+
+
+var_dump(rename($temppath,$final_file_path));
+
+function getPath()
+{
+
+	$dir = '/var/www/html/'.date('Y').'/'.date('m');
+
+    if (!is_dir($dir)) {
+     	mkdir($dir, 0777, true);
+ 	}
+
+    return $dir;
+}
+```
+
+## 参数结果上传比对
+
+|nginx <br>`client_max_body_size`| nginx <br>`upload_max_file_size` |php <br>`post_max_size`|php <br>`upload_max_filesize`|size|status|time(s)|
+|:---|:---|:---|:---|:---|:---|:---|
+30m |0(不限制)| 300M |2048m|14.3m| 200 |< 1|
+30m |0(不限制)| 300M |2048m|20.5m| 200 |< 1|
+30m |0(不限制)| 300M |2048m|23m| 200 |< 1|
+30m |0(不限制)| 300M |2048m|28.2m| 200 |< 1|
+30m |0(不限制)| 300M |2048m|29m| 200 |< 1|
+30m |0(不限制)| 300M |2048m|30.5m|200|< 1|
+30m |0(不限制)| 300M |2048m|30.8m|200|< 1|
+30m |0(不限制)| 300M |2048m|31.5m| 413 |< 1|
+300m|0(不限制)| 500M |2048m|31.5m| 200| <=9|
+300m|0(不限制)| 500M |2048m|34.5m| 200| <=2|
+300m|0(不限制)| 500M |2048m|199.1m| 200| <=25|
+300m|0(不限制)| 500M |2048m|233.9m| 200 | <=25|
+500m|0(不限制)| 500M |2048m|391.7m| 200 | <=38|
+500m|0(不限制)| 100M |2048m|391.7m| 200 | <=38|
+500m|0(不限制)| 100M |8m|391.7m| 200 | 20-38|
+500m |0(不限制)| 30M | 8m |76.5m| 200 |< 1|
+500m |30m| 30M | 8m |49.2m| 200 |文件被忽略未上传|
+
+### 结论
+* 上传大小限制与nginx的`client_max_body_size`有关，与phpfpm相关参数无关
+* 当上传文件大小超过nginx的`upload_max_file_size`时，nginx返回200，但是该文件被忽略没有进行上传，php接不到post体为空
+* `client_max_body_size`的大小限制 以配置文件的最小单元为准（例：server外和server里同时定义，最终以server里的值为准）
+
+## 待解决问题
+### 1.Mac上传文件后，php`rename`后，文件无权限访问（文件夹权限已经是777）
+```
+total 1013656
+-r--------  1 nobody  wheel   27010695  9 27 16:43 test.pdf
+-r--------  1 nobody  wheel  391688684  9 27 16:42 test.zip
+-r--------  1 nobody  wheel   76527485  9 27 16:43 test.pdf
+```
+#### 处理方式
+* 暂无
+
+### 1.Mac上传文件后，php`rename`后，中文被转义
+#### 原文件
+```
+《程序员的职业素养》.pdf
+黑客与画家(中文版).docx
+实现模式.pdf
+```
+#### 结果
+```
+total 1013656
+-r--------  1 nobody  wheel   27010695  9 27 16:43 &#12298;&#31243;&#24207;&#21592;&#30340;&#32844;&#19994;&#32032;&#20859;&#12299;.pdf
+-r--------  1 nobody  wheel  391688684  9 27 16:42 &#23454;&#29616;&#27169;&#24335;.pdf
+-r--------  1 nobody  wheel   76527485  9 27 16:43 &#40657;&#23458;&#19982;&#30011;&#23478;(&#20013;&#25991;&#29256;).docx
+```
+
+#### 建议处理方式
+* 不保留原文件名，重新命名文件
