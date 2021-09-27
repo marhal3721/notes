@@ -34,6 +34,8 @@ cd nginx源码包目录
 ./configure --prefix=/usr/local/Cellar/nginx/1.21.1 \
 --sbin-path=/usr/local/Cellar/nginx/1.21.1/bin/nginx (忽略中间h很多参数) \
 --add-module=/usr/local/Cellar/nginx/1.21.1/src/nginx-upload-module-2.3.0
+make
+make install #会覆盖原配置
 ```
 
 ### 2.nginx配置文件
