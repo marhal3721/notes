@@ -97,16 +97,30 @@ server {
 
 
         # 这里写入http报头，pass到后台页面后能获取这里set的报头字段
-        upload_set_form_field $upload_field_name.name "$upload_file_name";
-        upload_set_form_field $upload_field_name.content_type "$upload_content_type";
-        upload_set_form_field $upload_field_name.path "$upload_tmp_path";
+        upload_set_form_field $upload_field_name.name "$upload_file_name";# HTML表单内的file字段名
+        upload_set_form_field $upload_field_name.content_type "$upload_content_type"; # 文件MIME类型
+        upload_set_form_field $upload_field_name.path "$upload_tmp_path";# 临时文件绝对路径
+        upload_set_form_field $upload_field_name.filename "$upload_file_name";# 不带路径的原始文件名
 
-        # Upload模块自动生成的一些信息，如文件大小与文件md5值，会耗费额外的cpu和资源
-        upload_aggregate_form_field "$upload_field_name.md5" "$upload_file_md5";
-        upload_aggregate_form_field "$upload_field_name.size" "$upload_file_size";
+        # Upload模块自动生成的一些信息，除去$upload_file_size, $upload_file_number这两个变量外，会耗费额外的cpu和资源
+        upload_aggregate_form_field "$upload_field_name.md5" "$upload_file_md5";# 上传文件的MD5哈希值(小写)
+        upload_aggregate_form_field "$upload_field_name.md5_uc" "$upload_file_md5_uc";# 上传文件的MD5哈希值(大写)
+        upload_aggregate_form_field "$upload_field_name.size" "$upload_file_size";# 上传文件的大小(bytes)
+        upload_aggregate_form_field "$upload_field_name.number" "$upload_file_number";# 上传文件的序号(从1开始)
+        upload_aggregate_form_field "$upload_field_name.crc32" "$upload_file_crc32";# 上传文件的CRC32校验码(十六进制)
+        upload_aggregate_form_field "$upload_field_name.sha1" "$upload_file_sha1";# 上传文件的SHA1哈希值(小写)
+        upload_aggregate_form_field "$upload_field_name.sha1_uc" "$upload_file_sha1_uc";# 上传文件的SHA1哈希值(大写)
+        upload_aggregate_form_field "$upload_field_name.sha256" "$upload_file_sha256";# 上传文件的SHA256哈希值(小写)
+        upload_aggregate_form_field "$upload_field_name.sha256_uc" "upload_file_sha256_uc";# 上传文件的SHA256哈希值(大写)
+        upload_aggregate_form_field "$upload_field_name.sha512" "$upload_file_sha512";# 上传文件的SHA512哈希值(小写)
+        upload_aggregate_form_field "$upload_field_name.sha512_uc" "upload_file_sha512_uc";# 上传文件的SHA512哈希值(大写)
 
         # 允许的字段，允许全部可以 "^.*$"
+        # 默认情况下,本模块并不会将file类型字段以外的input字段发送给下一阶段处理，,除非在此显式声明字段名称(非类型)
         upload_pass_form_field "^submit$|^description$";
+        # 其等同于
+        # pload_pass_form_field "submit";
+        # upload_pass_form_field "description";
 
         # 每秒字节速度控制，0表示不受控制，默认0, 128K
         upload_limit_rate 0;
@@ -142,9 +156,9 @@ server {
   <body>
     <h2>Select files to upload</h2>
     <form name="upload" method="POST" enctype="multipart/form-data" action="http://127.0.0.1:8889/upload">
-      <input type="file" name="file1"><br>
+      <input type="file" name="file"><br>
       <input type="submit" name="submit" value="Upload">
-      <input type="hidden" name="test" value="value">
+      <input type="hidden" name="description" value="this is my file description">
     </form>
   </body>
 </html>
@@ -155,8 +169,8 @@ server {
 
 header('content-type:text/html;charset=utf-8');
 
-$temppath = $_POST["file1_path"];
-$name = $_POST["file1_name"];
+$temppath = $_POST["file_path"];
+$name = $_POST["file_name"];
 
 $final_file_path = getPath() ."/{$name}";
 
@@ -231,3 +245,91 @@ total 1013656
 
 #### 建议处理方式
 * 不保留原文件名，重新命名文件
+
+
+## 代理上传测试
+
+### 准备
+```bash
+echo "127.0.0.1 upload.local.com" > /etc/hosts
+mkdir /var/www/html/upload
+touch /var/www/html/upload/index.html
+vim /usr/local/etc/nginx/conf.d/upload_proxy.conf
+```
+#### upload_proxy.conf
+```
+server {
+    listen       8890;
+    server_name  upload.local.com;
+
+    client_max_body_size 400m;
+    client_body_buffer_size 1024k;
+
+    real_ip_header X-Real-IP;
+
+    fastcgi_intercept_errors on;
+    error_page 500 502 503 504  /server/500.html;
+    error_page 404  /server/404.html;
+    
+    root /var/www/html/upload;
+
+    location = /server/500.html {
+        internal;
+    }
+
+    location = /server/404.html {
+        internal;
+    }
+
+    location = /favicon.ico {
+        log_not_found off;
+        access_log off;
+    }
+
+    location ~.*\.(js|css|html|png|jpg)$ {
+            access_log   off;
+    }
+
+    location / {
+        index index.html index.php;
+    }
+
+    location ~ /\. {
+        deny all;
+    }
+
+    location /upload {
+        proxy_pass   http://127.0.0.1:8889/upload;
+    }
+    
+    fastcgi_buffers 8 512k;
+    fastcgi_buffer_size 512k;
+    fastcgi_busy_buffers_size 1024k;
+    fastcgi_temp_file_write_size 1024k;
+}
+```
+
+#### index.html
+```
+<html>
+  <head>
+    <title>UploadProxy</title>
+  </head>
+  <body>
+    <h2>Select files to upload</h2>
+    <form name="upload" method="POST" enctype="multipart/form-data" action="http://127.0.0.1:8890/upload">
+      <input type="file" name="file"><br>
+      <input type="submit" name="submit" value="Upload">
+      <input type="hidden" name="description" value="xxxxx">
+    </form>
+  </body>
+</html>
+
+```
+
+#### 上传
+* 访问 `http://upload.local.com:8090/index.html` 选择文件并上传
+* 在`/var/www/html/2021/09` 出现上传的文件
+
+## 测试结果
+* 测试成功，可进行代理上传
