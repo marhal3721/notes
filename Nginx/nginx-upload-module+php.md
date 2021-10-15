@@ -40,6 +40,12 @@ make install #会覆盖原配置
 
 ### 2.nginx配置文件
 ```
+# upload_progress 模块参数
+# 语法：upload_progress <zone_name> <zone_size>;
+# 上下文：http
+# 作用：声名nginx server使用upload progress module，引用名为zone_name，并分配zone_size bytes的空间存放上传状态信息
+upload_progress proxied 2m;
+
 server {
     listen       8889;
     server_name  127.0.0.1;
@@ -68,22 +74,46 @@ server {
         access_log off;
     }
 
-    location ~.*\.(js|css|html|png|jpg)$ {
-            access_log   off;
+    location ~.*\.(png|jpg|jpeg|bmp|zip|rar|gz|doc|docx|xlsx|xsl|pdf|ppt|txt|mp3|wav|wmv|mp4|flv|avi|gif|mpeg|m3u8|rm|rmvb)$ {
+        access_log   off;
+        root /var/www/html/attachment/;
+        autoindex on;
+        if ($request_uri ~ \.(jpeg|png|jpg|bmp)\?x-qxy-process=image){
+            proxy_pass http://$host:$server_port/api/outputImage?$query_string&resource=$uri;
+        }
     }
 
     location / {
-        index index.html index.php;
-    
-        #try_files $uri $uri index.php?$args;
-       #try_files $uri $uri/ /index.php?s=$uri&$query_string;
+        index  index.html index.php;
+        try_files $uri $uri index.php?$args;
     }
 
     location ~ /\. {
         deny all;
     }
 
+    location /auth {
+        internal;
+        proxy_pass_request_body off;
+        proxy_set_header Content-Length "";
+        proxy_set_header X-Original-URI $request_uri;
+        proxy_pass http://$host:$server_port/api/auth?$query_string;
+    }
+
+    location ^~ /progress {
+        # 语法：report_uploads <zone_name>
+        # 上下文：location
+        # 作用：允许一个location响应上传状态，响应内容默认为一个javascript的new object语句对象，有四种状态响应：
+        report_uploads proxied;
+    }
+
     location /upload {
+
+        # 先校验权限
+        auth_request /auth;
+        #auth_request_set $user $upstream_http_x_forwarded_user;
+        #proxy_set_header X-Forwarded-User $user;
+
         #后续处理的后端地址。文件中的字段将被分离和取代，包含必要的信息处理上传文件。
         upload_pass   @test; 
         # 打开开关，意思就是把前端脚本请求的参数会传给后端的脚本语言，比如：
@@ -127,6 +157,11 @@ server {
 
         # 如果pass页面是以下状态码，就删除此次上传的临时文件
         upload_cleanup 400 404 499 500-505;
+
+        # 语法：track_uploads <zone_name> <timeout>;
+        # 上下文：location
+        # 作用：声名此location使用upload_progress模块记录文件上传，这条指令必须位于location配置的最后。
+        track_uploads proxied 2s;
     }
 
     location @test {
@@ -149,18 +184,99 @@ server {
 ```
 ## html代码
 ```html
+<!DOCTYPE html>
 <html>
-  <head>
-    <title>Test upload</title>
-  </head>
-  <body>
-    <h2>Select files to upload</h2>
-    <form name="upload" method="POST" enctype="multipart/form-data" action="http://127.0.0.1:8889/upload">
-      <input type="file" name="file"><br>
-      <input type="submit" name="submit" value="Upload">
-      <input type="hidden" name="description" value="this is my file description">
-    </form>
-  </body>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <style type="text/css">
+        .bar {
+            width: 300px;
+        }
+
+        #progress {
+            background: #eee;
+            border: 1px solid #222;
+            margin-top: 20px;
+        }
+
+        #progressbar {
+            width: 0px;
+            height: 24px;
+            background: #333;
+        }
+    </style>
+</head>
+<body>
+<form id="upload" enctype="multipart/form-data" action="http://oss.base.qixinyun.com/upload" method="post"
+      onsubmit="openProgressBar(); return true;">
+    <input type="hidden" name="MAX_FILE_SIZE" value="30000000"/>
+    <input name="file" type="file" label="fileupload"/>
+    <input name="indexName" type="hidden" value="file" />
+    <input type="submit" value="Send File"/>
+</form>
+
+<div>
+    <div id="progress" style="width: 400px; border: 1px solid black">
+        <div id="progressbar" style="width: 1px; background-color: black; border: 1px solid white">&nbsp;</div>
+    </div>
+    <div id="tp">(progress)</div>
+</div>
+
+<script type="text/javascript">
+
+    interval = null;
+
+    function openProgressBar() {
+        /* generate random progress-id */
+        uuid = "";
+        for (i = 0; i < 32; i++) {
+            uuid += Math.floor(Math.random() * 16).toString(16);
+        }
+        /* patch the form-action tag to include the progress-id */
+        document.getElementById("upload").action = "http://oss.base.qixinyun.com/upload?X-Progress-ID=" + uuid + "&token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJvYS5iYXNlLnFpeGlueXVuLmNvbSIsImF1ZCI6Im9hLmJhc2UucWl4aW55dW4uY29tIiwiaWF0IjoxNjM0Mjk4MDAyLCJuYmYiOjE2MzQyOTgwMDIsImV4cCI6MTYzNDI5ODYwMiwiZGF0YSI6eyJpZGVudGlmeSI6ImMwNWJhODU1ODQ0MjQzZDhlN2I3NTNkNTU0NWFjZDExIn19.eSQAL276QCSPcYTy3RNbaEZGEssYCN9Y8mLRC7g7UUw";
+
+        /* call the progress-updater every 1000ms */
+        interval = window.setInterval(
+            function () {
+                fetch(uuid);
+            },
+            1000
+        );
+    }
+
+    function fetch(uuid) {
+        req = new XMLHttpRequest();
+        req.open("GET", "http://oss.base.qixinyun.com/progress", 1);
+        req.setRequestHeader("X-Progress-ID", uuid);
+        req.onreadystatechange = function () {
+            console.log(req);
+            if (req.readyState == 4) {
+                if (req.status == 200) {
+                    /* poor-man JSON parser */
+                    var upload = eval(req.responseText);
+
+                    document.getElementById('tp').innerHTML = upload.state;
+
+                    /* change the width if the inner progress-bar */
+                    if (upload.state == 'done' || upload.state == 'uploading') {
+                        bar = document.getElementById('progressbar');
+                        w = 400 * upload.received / upload.size;
+                        bar.style.width = w + 'px';
+                    }
+                    /* we are done, stop the interval */
+                    if (upload.state == 'done') {
+                        window.clearTimeout(interval);
+                    }
+                }
+            }
+        }
+        req.send(null);
+    }
+
+</script>
+
+</body>
 </html>
 ```
 ## php代码
@@ -169,8 +285,9 @@ server {
 
 header('content-type:text/html;charset=utf-8');
 
-$temppath = $_POST["file_path"];
-$name = $_POST["file_name"];
+$indexName = $_POST['indexName'];
+$temppath = $_POST[$indexName."_path"];
+$name = $_POST[$indexName."file_name"];
 
 $final_file_path = getPath() ."/{$name}";
 
@@ -188,6 +305,99 @@ function getPath()
 
     return $dir;
 }
+```
+
+* auth.php
+```php
+public function auth(): bool
+    {
+        $originalUrl =$this->getOriginalUrl();
+
+        $token = $this->getToken($originalUrl);
+
+        if ($this->verifyToken($token)) {
+            return true;
+        }
+
+        header('WWW-Authenticate: Basic realm="file Server"');
+        header('HTTP/1.1 401 Unauthorized');
+        return false;
+    }
+
+    /**
+     * @SuppressWarnings(PHPMD)
+     */
+    protected function getOriginalUrl() : string
+    {
+        return Server::get('HTTP_X_ORIGINAL_URI', '');
+    }
+
+    /**
+     * 获取传入的token值
+     * @param string $originalUrl X-Progress-ID=becefe5c50f87ba37f6e5dfaf32602c1&token=123456
+     * @return string
+     */
+    protected function getToken(string $originalUrl) : string
+    {
+        $originalUrl = explode('&', $originalUrl);
+        foreach ($originalUrl as $item) {
+            if (str_contains($item, 'token')) {
+                $token = explode('=', $item);
+                if (isset($token[1])) {
+                    return $token[1];
+                }
+            }
+        }
+
+        return '';
+    }
+
+    public function verifyToken(string $token = '') : bool
+    {
+        if (empty($token)) {
+            return false;
+        }
+        try {
+            JWT::$leeway = 60;
+            JWT::decode($token, Core::$container->get('jwt.key'), ['HS256']);
+
+            return true;
+        } catch (\UnexpectedValueException $e) {
+            unset($e);
+            return false;
+        }
+    }
+
+    public function createToken() : bool
+    {
+        $nowTime = time();
+
+        $token = [
+            'iss' => Core::$container->get('jwt.iss'), //签发者
+            'aud' => Core::$container->get('jwt.aud'), //jwt所面向的用户
+            'iat' => $nowTime, //签发时间
+            'nbf' => $nowTime + Core::$container->get('jwt.nbf'), //在什么时间之后该jwt才可用
+            'exp' => $nowTime + Core::$container->get('jwt.exp'), //过期时间+10min
+            'data' => [
+                'identify' => $this->generateIdentify()
+            ]
+        ];
+
+        $jwt = JWT::encode($token, Core::$container->get('jwt.key'));
+
+        $this->render(new AuthTokenView($jwt));
+        return true;
+    }
+
+    /**
+     * [generateIdentify 生成登录标识]
+     * @return string [string]  [返回类型]
+     */
+    protected function generateIdentify() : string
+    {
+        return md5(serialize(Server::get('marmot')).time());
+    }
+
 ```
 
 ## 参数结果上传比对
