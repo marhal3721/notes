@@ -1,4 +1,18 @@
-# 安装docker
+# win10安装docker
+
+* 启用虚拟化
+    * 进入任务管理器（ctrl+alt+delete），
+    * 点击性能->cpu ,查看虚拟化是否已启用，
+    * 如果虚拟化是已禁用，重启电脑进入bios开启虚拟化
+    * 进入电脑的控制面板->程序->启用或关闭Windows功能->勾选Hyper-v确定
+    * 重启电脑
+* 启用适用于Linux的Windows子系统
+    * 方法一：PowerShell：Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
+    * 方法二：控制面板->启用或关闭Windows功能->启用适用于Linux的Windows子系统打勾->确定
+* Microsoft Store 下载 ubuntu
+* 下载并安装 [Docker for Windows](https://docs.docker.com/docker-for-windows/install/#download-docker-for-windows)
+
+# 子系统安装docker
 ```
 sudo apt-get remove docker docker-engine  docker.io
 sudo apt-get update
@@ -17,21 +31,7 @@ sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io
 ```
 
-# win10安装docker
-
-* 启用虚拟化
-    * 进入任务管理器（ctrl+alt+delete），
-    * 点击性能->cpu ,查看虚拟化是否已启用，
-    * 如果虚拟化是已禁用，重启电脑进入bios开启虚拟化
-    * 进入电脑的控制面板->程序->启用或关闭Windows功能->勾选Hyper-v确定
-    * 重启电脑
-* 启用适用于Linux的Windows子系统
-    * 方法一：PowerShell：Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
-    * 方法二：控制面板->启用或关闭Windows功能->启用适用于Linux的Windows子系统打勾->确定
-* Microsoft Store 下载 ubuntu
-* 下载并安装 (Docker for Windows)[https://docs.docker.com/docker-for-windows/install/#download-docker-for-windows]
-
-# 联动 (参考文档)[https://www.cnblogs.com/xiaoliangge/p/9134585.html]
+# 联动 [参考文档](https://www.cnblogs.com/xiaoliangge/p/9134585.html)
 
 ## win10
 * 打开docker面板 点击右上角设置 -> General -> 勾选 `Expose daemon on tcp://localhost:2375 without TLS` 和 `Use the WSL 2 based engine`
