@@ -18,7 +18,7 @@ ALTER TABLE `tableNname` ALTER COLUMN `columnName` int(11) NOT NULL;
 ```
 * <a id="删除/增加主键">删除/增加主键</a>
 ```sql
-ALTER TABLE `tableNname` DROP CONSTRAINT PK_name（主键名字）;
+ALTER TABLE `tableNname` DROP CONSTRAINT PK_name(主键名字);
 ```
 ```sql
 ALTER TABLE `tableNname` ADD CONSTRAINT PK_name primary key(`columnName`);
