@@ -44,6 +44,17 @@ composer -vvv require alibabacloud/sdk
 ```bash
 # 将Composer版本升级到最新
 composer self-update
+## Command "self-update" is not defined.错误解决
+######
+#1.删除原有的composer
+sudo apt-get purge composer
+#2.安装新的composer
+php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');";
+#3.赋予相应的权限
+sudo php composer-setup.php --install-dir=/usr/bin --filename=composer;
+#4.升级
+composer self-update;
+######
 
 # 执行诊断命令
 composer diagnose
