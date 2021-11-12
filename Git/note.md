@@ -9,7 +9,8 @@
     - [撤销add](#撤销add)
     - [BranchExample](#BranchExample)
     - [撤销远程push](#撤销远程push)
-    - [Git添加秘钥](#Git)
+    - [Git添加秘钥](#Git添加秘钥)
+    - [Git同时推送到多个仓库](#gitPushMoreRepository)
 
 ## <a id="git">git</a>
 
@@ -132,7 +133,7 @@ git reset --hard <commitId>
 git push origin <分支名称> --force
 ```
 
-* <a id="Git">Git添加秘钥</a>
+* <a id="Git添加秘钥">Git添加秘钥</a>
 
 ```bash
 ssh-keygen -t rsa -C "junwuji555@sina.com"
@@ -145,4 +146,12 @@ git config --global credential.helper store
 ssh -T git@github.com
 # git配置信息
 git config --list
+```
+
+* <a id="gitPushMoreRepository">Git同时推送到多个仓库</a>
+```bash
+# 给origin添加一个远程push地址，gitUrl 为新增的git仓库地址
+git remote set-url --add origin gitUrl
+# 验证是否多了一条push地址
+git remote -v 
 ```
