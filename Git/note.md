@@ -150,8 +150,15 @@ git config --list
 
 * <a id="gitPushMoreRepository">Git同时推送到多个仓库</a>
 ```bash
-# 给origin添加一个远程push地址，gitUrl 为新增的git仓库地址
+# 1.给origin添加一个远程push地址，gitUrl 为新增的git仓库地址
 git remote set-url --add origin gitUrl
-# 验证是否多了一条push地址
+# 2.验证是否多了一条push地址
 git remote -v 
+
+# 强制推送
+git push origin master -f
+
+# 删除仓库 
+git remote set-url --delete origin 地址
+
 ```
