@@ -53,8 +53,11 @@ docker image prune -af
 # 清除多余的数据，包括停止的容器、多余的镜像、未被使用的volume等等
 docker system prune -f
 
+# dockerfile 构建,在dockerfile的目录下执行
+docker build . -t 2004-nginx
 # 启动
-docker run -itd -name mydockerName -p 80:80 myimageName
+docker run -itd --name m-nginx -p 8086:80 2004-nginx
+docker run -itd --name mydockerName -p 80:80 myimageName
 
 ```
 ## <a id="docker-run">Docker run 参数解析</a>
@@ -84,4 +87,6 @@ docker run -itd -name mydockerName -p 80:80 myimageName
 # 官方文档：https://docs.docker.com/desktop/mac/networking/
 $connect = oci_connect('MARHAL', '123456', 'docker.for.mac.host.internal:49161/XE', 'UTF8');
 ```
+
+## Dockerfile 构建错误
 
