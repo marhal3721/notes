@@ -35,6 +35,9 @@ jobs
 
 ## 查看进程
 ps -aux | grep php
+
+# 查看当前目录文件的大小
+du -sh *
 ```
 
 ## win10下ubuntu子系统与windows的目录影射
