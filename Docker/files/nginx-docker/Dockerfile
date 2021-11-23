@@ -9,6 +9,7 @@ ADD sources.list /etc/apt/
 
 #创建nginx用户
 RUN useradd -M -s /sbin/nologin nginx 
+
 #切换工作目录
 WORKDIR /usr/local/src/$NG_VERSION
 
@@ -40,11 +41,25 @@ RUN apt-get install -y libgeoip-dev \
 RUN wget http://www.zlib.net/zlib-1.2.11.tar.gz
 RUN tar -zxvf zlib-1.2.11.tar.gz
 RUN cd zlib-1.2.11 && ./configure && make && make install
-RUN cd /usr/local/src/$NG_VERSION && rm -rf zlib-1.2.11 && rm zlib-1.2.11.tar.gz
 
+RUN mkdir -p /var/cache/nginx
+RUN mkdir -p /var/log/nginx
+RUN mkdir -p /var/www/html
+
+WORKDIR /usr/local/src/$NG_VERSION
 RUN wget https://nginx.org/download/nginx-1.21.4.tar.gz
 RUN tar -zxvf nginx-1.21.4.tar.gz
 RUN cd nginx-1.21.4 && ./configure --user=nginx --group=nginx --prefix=/usr/local/nginx \
+    --error-log-path=/var/log/nginx/error.log \
+    --http-log-path=/var/log/nginx/access.log \
+    --conf-path=/etc/nginx/nginx.conf \
+    --pid-path=/var/run/nginx.pid \
+    --lock-path=/var/run/nginx.lock \
+    --http-client-body-temp-path=/var/cache/nginx/client_temp \
+    --http-proxy-temp-path=/var/cache/nginx/proxy_temp \
+    --http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp \
+    --http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp \
+    --http-scgi-temp-path=/var/cache/nginx/scgi_temp \
     --with-file-aio \
     --with-http_ssl_module \
     --with-http_realip_module \
@@ -66,16 +81,22 @@ RUN cd nginx-1.21.4 && ./configure --user=nginx --group=nginx --prefix=/usr/loca
     && make \
     && make install
 
-RUN cd /usr/local/src/$NG_VERSION && rm -rf nginx-1.21.4 && rm nginx-1.21.4.tar.gz
-RUN cd
+RUN rm -rf /usr/local/src/$NG_VERSION
+# 备份配置文件
+RUN cp /etc/nginx/nginx.conf /etc/nginx/nginx.default.bak
+# 自定义配置文件
+COPY nginx_conf/nginx.conf /etc/nginx/
+COPY nginx_conf/conf.d /etc/nginx/conf.d
 
-ADD index.html /usr/local/nginx/html
+# 添加根目录测试访问文件
+ADD index.html /var/www/html
 #设置容器中要挂在到宿主机的目录
 #VOLUME /usr/local/nginx/html
 
+WORKDIR //var/www/html
 #设置sbin环境变量
-# ENV PATH /usr/local/nginx/sbin:$PATH
+ENV PATH /usr/local/nginx/sbin:$PATH
 #暴露80端口
 EXPOSE 80
-# ENTRYPOINT ["nginx"]
-# CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["nginx"]
+CMD ["-g", "daemon off;"]
