@@ -93,7 +93,7 @@ ADD index.html /var/www/html
 #设置容器中要挂在到宿主机的目录
 #VOLUME /usr/local/nginx/html
 
-WORKDIR //var/www/html
+WORKDIR /var/www/html
 #设置sbin环境变量
 ENV PATH /usr/local/nginx/sbin:$PATH
 #暴露80端口

@@ -31,6 +31,7 @@ vendor/bin/phpunit --stop-on-failure --log-junit junit.xml --coverage-text=cover
 # pdepend 软件分析器和度量工具
 * [pdepend](https://packagist.org/packages/pdepend/pdepend)
 * [Doc](https://pdepend.org/documentation/getting-started.html)
+* [Doc](https://www.testwo.com/blog/7640)
 
 # faker mock数据生成器
 * [faker](https://packagist.org/packages/fakerphp/faker)
