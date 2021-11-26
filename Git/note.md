@@ -161,3 +161,8 @@ git push origin master -f
 # 删除仓库 
 git remote set-url --delete origin 地址
 ```
+
+* <a id="">查看最后一次提交者</a>
+```bash
+git show -s --format=%an
+```
