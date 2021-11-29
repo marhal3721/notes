@@ -1,5 +1,4 @@
-FROM ubuntu:20.04
-# AS builder
+FROM debian:buster-slim
 
 ENV NG_VERSION nginx-1.21.4
 WORKDIR /usr/local/src/
@@ -7,41 +6,52 @@ WORKDIR /usr/local/src/
 #更换阿里云源
 ADD sources.list /etc/apt/
 
-#创建nginx用户
-RUN useradd -M -s /sbin/nologin nginx 
-
 #切换工作目录
 WORKDIR /usr/local/src/$NG_VERSION
 
 #避免交互操作
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update \
+#./configure: error: the HTTP rewrite module requires the PCRE library
+# libpcre3 libpcre3-dev
+
+# ./configure: error: C compiler cc is not found
+# gcc
+
+# ./configure: error: SSL modules require the OpenSSL library.
+# openssl libssl-dev
+
+#  ./configure: error: the HTTP gzip module requires the zlib library.
+# zlib1g-dev
+
+# ./configure: error: the HTTP XSLT module requires the libxml2/libxslt
+# libxml2 libxml2-dev libxslt-dev
+
+#  ./configure: error: the GeoIP module requires the GeoIP library
+# libgeoip-dev
+
+# ./configure: error: the HTTP image filter module requires the GD library.
+# libgd-dev
+
+# /bin/sh: 1: make: not found
+# make
+
+RUN addgroup --system --gid 101 nginx \
+    && mkdir /nonexistent \
+    && adduser --system --disabled-login --ingroup nginx --no-create-home --home /nonexistent --gecos "nginx user" --shell /bin/false --uid 101 nginx \
+    && apt-get update \
     && apt-get install -y wget \
-    && apt-get install -y make \
     && apt-get install -y gcc \
-    && apt-get install -y libc6-dev \
     && apt-get install -y libpcre3 libpcre3-dev \
-    && apt-get install -y build-essential \
-    && apt-get install -y autoconf \
-    && apt-get install -y g++ \
-    && apt-get install -y openssl \
-    && apt-get install -y libssl-dev \
+    && apt-get install -y openssl libssl-dev \
+    && apt-get install -y zlib1g-dev \
     && apt-get install -y libxml2 libxml2-dev libxslt-dev \
-    && apt-get install -y libgeoip-dev \
     && apt-get install -y libgd-dev \
+    && apt-get install -y libgeoip-dev \
+    && apt-get install -y make \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-
-RUN wget http://www.zlib.net/zlib-1.2.11.tar.gz \
-    && tar -zxvf zlib-1.2.11.tar.gz \
-    && cd zlib-1.2.11 \
-    && ./configure \
-    && make \
-    && make install
-
-RUN mkdir -p /var/cache/nginx \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+    && mkdir -p /var/cache/nginx \
     && mkdir -p /var/log/nginx \
     && mkdir -p /var/www/html \
     && wget https://nginx.org/download/nginx-1.21.4.tar.gz \
@@ -78,9 +88,8 @@ RUN mkdir -p /var/cache/nginx \
     --with-http_stub_status_module \
     && make \
     && make install \
-
-# 删除下载文件&&备份配置文件
-RUN rm -rf /usr/local/src/$NG_VERSION \
+    && apt-get -y remove wget make gcc \
+    && rm -rf /usr/local/src/$NG_VERSION \
     && cp /etc/nginx/nginx.conf /etc/nginx/nginx.default.bak
 
 # 自定义配置文件
