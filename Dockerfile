@@ -1,4 +1,4 @@
-FROM registry.cn-hangzhou.aliyuncs.com/marhal/nginx:latest
+FROM registry.cn-hangzhou.aliyuncs.com/marhal/nginx:0.1.4
 
 COPY . /var/www/html/
 

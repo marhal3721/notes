@@ -1,6 +1,7 @@
 * [Docker Command](#Docker)
 * [Docker run 参数解析](#docker-run)
 * [Mac下docker访问主机服务](#MacDocker)
+* [docker 构建镜像并推送](#Dockerfile-push)
 
 ## <a id="Docker">Docker Command</a>
 
@@ -82,11 +83,24 @@ docker run -itd --name mydockerName -p 80:80 myimageName
 
 ## <a id="MacDocker">Mac下docker访问主机服务</a>
 ```php
-
+# 172.16.0.201 host.docker.internal
+# 172.16.0.201 gateway.docker.internal
 # 将host设置为docker.for.mac.host.internal(host.docker.internal)即可
 # 官方文档：https://docs.docker.com/desktop/mac/networking/
 $connect = oci_connect('MARHAL', '123456', 'docker.for.mac.host.internal:49161/XE', 'UTF8');
 ```
 
-## Dockerfile 构建错误
+## <a id="Dockerfile-push">Dockerfile 构建镜像并推送</a>
+```bash
+docker build . -t nginx-1
+docker run docker run -itd --name nginx-a -p 8061:80 nginx-1
+# 登录远程仓库并输入密码
+docker login --username=junwuji555@sina.com registry.cn-hangzhou.aliyuncs.com
+# 打标签
+docker tag [imageId] [registryName]:[version] 
+docker tag deaac4270050 registry.cn-hangzhou.aliyuncs.com/marhal/nginx:latest 
+# 推送
+docker push [registryName]:[version] 
+docker push registry.cn-hangzhou.aliyuncs.com/marhal/nginx:latest
+```
 
