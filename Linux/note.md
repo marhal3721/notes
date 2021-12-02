@@ -38,6 +38,14 @@ ps -aux | grep php
 
 # 查看当前目录文件的大小
 du -sh *
+
+# 文件内容替换
+## 替换文件中的内容 text->replace 
+sed -i 's/[text]/[replaceText]/' [file]
+sed -i "s/;openssl.cafile=/openssl.cafile=\/usr\/lib\/ssl\/cacert.pem/g" /usr/local/php/etc/php.ini
+
+## 移除文件中的空白行
+sed '/^$/d' [file]
 ```
 
 ## win10下ubuntu子系统与windows的目录影射
