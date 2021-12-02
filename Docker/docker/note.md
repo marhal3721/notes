@@ -49,6 +49,9 @@ docker rm `docker ps -a|grep Exited|awk '{print $1}'`
 docker rm $(docker ps -qf status=exited)
 docker container prune
 
+# 删除所有关闭的容器
+docker ps -a | grep Exit | cut -d ' ' -f 1 | xargs docker rm
+
 # 仅仅清除没有被容器使用的镜像文件
 docker image prune -af
 # 清除多余的数据，包括停止的容器、多余的镜像、未被使用的volume等等
@@ -59,6 +62,22 @@ docker build . -t 2004-nginx
 # 启动
 docker run -itd --name m-nginx -p 8086:80 2004-nginx
 docker run -itd --name mydockerName -p 80:80 myimageName
+
+# 查看镜像的构建过程
+docker history [REPOSITORY]:[TAG]
+# 查看镜像的完整构建过程
+docker history [REPOSITORY]:[TAG] --no-trunc
+
+# 查询僵尸文件
+docker volume ls -qf dangling=true
+
+# 删除所有dangling数据卷（即无用的Volume，僵尸文件）
+docker volume rm $(docker volume ls -qf dangling=true)
+
+# 删除所有dangling镜像（即无tag的镜像）
+docker rmi $(docker images | grep "^<none>" | awk "{print $3}")
+
+
 
 ```
 ## <a id="docker-run">Docker run 参数解析</a>
