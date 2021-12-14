@@ -4,6 +4,7 @@
     - [查看所有分支](#查看所有分支)
     - [删除本地分支](#删除本地分支)
     - [删除远程分支](#删除远程分支)
+    - [更新分支情况](#更新分支情况)
     - [Tag](#Tag)
     - [撤销commit](#撤销commit)
     - [撤销add](#撤销add)
@@ -88,6 +89,28 @@ git branch -D [branch name]
 git push origin :[branch name]
 git push origin --delete [branch name]
 ```
+
+* <a id="更新分支情况">更新分支情况</a>
+```bash
+# 远程删了分支本地还在的处理
+git fetch origin --prune
+
+# 1.追踪本地分支与仓库的关系
+git remote show origin
+## track 已同步的分支
+## new (next fetch will store in ...) 仓库里的新分支，本地没有
+## stale (use 'git remote prune' to remove) 本地有但是仓库已经删除
+
+# 2.将仓库中已删除的分支与本地分支的追踪关系删除掉
+git remote prune origin
+
+# 3.本地分支删除
+git branch -D [branch_name]
+
+# 4.本地仓库添加仓库新分支trace
+git fetch origin [branch_name]
+```
+
 * <a id="Tag">Tag</a>
 
 ```bash
