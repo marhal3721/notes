@@ -119,6 +119,7 @@ php -S localhost:4000 -c /app/config/php.ini
 ```
 
 * 判断
+
 ```text
 php_sapi_name() == 'cli-server'
 ```
@@ -180,9 +181,9 @@ php_sapi_name() == 'cli-server'
 ## 日期、时间和时区
 * 设置默认时区
   * php.ini
-    * date.timezone='Asia/Shanghai'
+    * `date.timezone='Asia/Shanghai'`
   * php
-    * date_default_timezone_set('Asia/Shanghai')
+    * `date_default_timezone_set('Asia/Shanghai')`
 * 组件
   * [nesbot/carbon](https://packagist.org/packages/nesbot/carbon)
 
@@ -340,6 +341,7 @@ restore_error_handler();
 
 ## 调优
 * [PHP Iniscan 工具](https://github.com/psecio/iniscan)
+
 ### **memroy_limit**
 * 默认128M
 * 如果运行微型PHP应用可以降低值，节省系统资源
@@ -457,6 +459,7 @@ restore_error_handler();
   * 流行工具 [Behat](http://behat/org/)
 
 #### PHPUnit
+
 * PHPUnit 测试在一起组成`测试用例`(test case), 测试用例在一起组成`测试组件`(test suite)。
 * PHPUnit 会使用测试运行`程序`(test runner)运行测试组件
 * 一个测试用例是一个PHP类， 扩展自 `PHPUnit_Framework_Testcase` 类。
@@ -466,6 +469,7 @@ restore_error_handler();
 * 测试用例的类名必须以 Test 结尾，所在的文件名必须以 Test.php 结尾
 
 ---
+
 * 目录结构
 * src/ 源码
 * tests/ PHPUnit测试
@@ -475,13 +479,17 @@ restore_error_handler();
 * .travis.yml
 
 ---
+
 * 安装
+
 ```bash
 composer require --dev phpunit/phpunit
 ```
 
 --- 
+
 * phpunit.xml
+
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <phpunit backupGlobals="false"
@@ -492,7 +500,6 @@ composer require --dev phpunit/phpunit
          convertWarningsToExceptions="true"
          forceCoversAnnotation="false"
         bootstrap="tests/bootstrap.php">
-
   <php>
     <var name="DB_DSN" value="mysql:dbname=marmot_test;host=mysql" />
     <var name="DB_USER" value="root" />
@@ -519,7 +526,9 @@ composer require --dev phpunit/phpunit
 ```
 
 ---
+
 * tests/bootstrap.php
+
 ```php
 <?php
 
