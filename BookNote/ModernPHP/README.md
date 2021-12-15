@@ -12,6 +12,7 @@
   * 不要在多个地方重复编写相同的代码。如果需要修改遵守这个原则的编码，只需在一处修改，改动就能体现到其他地方
 * PHP解释器在编译时会把性状复制粘贴到类的`定义体`中，但是不会处理这个操作引入的不兼容问题
 * 性状在类的`定义体`引入
+
 ```php
 <?php
 trait MyTrait
@@ -20,6 +21,7 @@ trait MyTrait
     
 }
 ```
+
 ```php
 <?php
 class MyClass
@@ -89,18 +91,18 @@ foreach (getRows($file) as $row) {
 ## 闭包和匿名函数
 
 ## 字节码缓存(Zend OPcache)
-* --enable-opcache
+* `--enable-opcache`
 * php.ini
-  * zend_extension=/path/to/opcache.so
+  * `zend_extension=/path/to/opcache.so`
 * 找到扩展所在目录
-  * php-config --extension-dir
+  * `php-config --extension-dir`
 * 配置 [Documents](https://www.php.net/manual/zh/opcache.configuration.php)
-  * opcache.validate_timestamps=1 //为0时,察觉不到php脚本的变化，必须手动清空Zend OPcache缓存的字节码
-  * opcache.revalidate_freq=0 //validate_timestamps=1,revalidate_freq=0 启动自动重新验证缓存功能
-  * opcache.memory_consumption=64
-  * opcache.interned_strings_buffer=16
-  * opcache.max_accelerated_files=4000
-  * opcache.fast_shutdown=1
+  * `opcache.validate_timestamps=1` //为0时,察觉不到php脚本的变化，必须手动清空Zend OPcache缓存的字节码
+  * `opcache.revalidate_freq=0 `//validate_timestamps=1,revalidate_freq=0 启动自动重新验证缓存功能
+  * `opcache.memory_consumption=64`
+  * `opcache.interned_strings_buffer=16`
+  * `opcache.max_accelerated_files=4000`
+  * `opcache.fast_shutdown=1`
 
 ## 内置的Http服务器
 
@@ -193,7 +195,7 @@ php_sapi_name() == 'cli-server'
   * `header('Content-Type: application/json;charset=utf-8')`
 * html
   * `<meta charset="UTF-8">`
-  
+
 ## 流
 * [流封装协议](https://www.php.net/manual/zh/wrappers.php)
   * 函数
@@ -284,19 +286,20 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
 
 restore_error_handler();
 ```
+
 # 三、部署、测试、调优
 
 ## PHP-FPM
 
 ### 全局配置
 * [php-fpm.conf](http://php.net/manual/zh/install.fpm.configuration.php)
-* emergency_restart_threshold=10
+* `emergency_restart_threshold=10`
   * 指在指定一段时间内，如果失效的php-fpm子进程超过这个值，php-fpm主进程就优雅重启
-* emergency_restart_interval=1m
+* `emergency_restart_interval=1m`
   * 设定 emergency_restart_threshold 设置采用的时间跨度
 
 ### 配置进程池
-* www.conf
+* [www.conf](http://php.net/manual/zh/install.fpm.configuration.php)
 * `user = www`
   * 拥有这个php-fpm进程池中子进程的系统用户
 * `group = www`
@@ -343,8 +346,8 @@ restore_error_handler();
 * 设置依据
   * 一共能分配给php多少内存？
   * 单个php进程平均消耗多少内存？
-    * top实时统计
-    * memory_get_peak_usage()
+    * `top`实时统计
+    * `memory_get_peak_usage()`
   * 能负担得起多少个php-fpm进程？
     * 分配了512M，单个进程平均消耗15M，可以负担起34个php-fpm进程
   * 有足够的系统资源吗
@@ -371,7 +374,26 @@ restore_error_handler();
   * 能让操作码使用更快的停机步骤，把对象析构和内存释放交给Zend Engine的内存管理器完成
 
 ### **最长执行时间**
+* php.ini `max_execution_time = 5`
+* php 脚本 可以用 `set_time_limit()` 覆盖
+* 队列工具
+  * [php-resque](https://github.com/chrisboulton/php-resque)
 
+### 处理会话
+* 会话数据存储到 [Memcached](http://pecl.php.net/package/memcached)
+  * `session.save_handler= 'memcached'`
+  * `session.save_path= '127.0.0.0:11211'`
+
+### 缓冲输出
+* `output_buffering = 4096`
+* `implicit_flush = false`
+* 想修改输出缓冲区的大小，确保系统使用的值是4(32位系统) 或 8(64位系统)的倍数
+
+### 真实缓存路径
+* `realpath_cache_size = 64k`
+* 在php脚本末尾增加`print_r(realpath_cache_size())`可以输出真实路径缓存的真正大小
+
+## 部署
 
 ## 测试
 
