@@ -396,11 +396,132 @@ restore_error_handler();
 ## 部署
 
 ## 测试
+* 测试是开发PHP应用过程中重要的一步
+* 很多人不测试，因为他们觉得测试是不必要的负担，投入的时间多而收益缺很少
+* 有些开发者不知道如何测试，因为测试工具太多，学习曲线太陡
 
-### 单元测试 PHPUnit
+### 为什么测试
+* 目的：
+  * 为了确保PHP应用始终能按照我们预期的方式运行
+* 现状
+  * 经常害怕把应用部署到生产环境
+  * 祈祷代码能正常运行
+* 阻碍
+  * 老板可能不同意这么做，觉得没有足够的时间编写测试，毕竟时间就是金钱 —— 这是鼠目寸光的想法
+* 好处
+  * 安装测试所需的基础设施以及编写测试是要花时间，但这是明智的投资，未来会得到回报
+  * 测试能协助我们编写一开始可以正常运行的代码，而且在持续迭代的过程中还能确保没有破坏之前的代码
+  * 编写测试可能会让进度慢下来，但是有了测试，以后我们不用浪费大量时间排查和重构以前忽略的缺陷
+  * 从长远看，测试能省钱，能减少停机时间，还能鼓舞人心
+  
+### 何时测试
+* 开发之前
+  * 安装和配置测试工具
+  * 和项目经理要定义应用的整体行为
+* 开发的过程中
+  * 在开发应用的每个功能时都要编写并运行测试
+  * 在开发的过程中测试能增强子欣，写出稳定的代码，还能帮助我们快速找出并重构破坏现有功能的新代码
+* 开发完成之后
+  * 如果发布应用后发现了缺陷，要编写新测试，确保修补缺陷的方式是正确的
+  * 测试不是一劳永逸的事情，和应用本身一样，我们要不断修改和改进
+  
+### 测试什么
+* 测试应用的最小组成部分
+* 从微观的角度来看，应用由PHP类、方法和函数组成。因此应该隔离测试每个公开的类、方法和函数，确保符合预期
+* 如果我们知道各个部分能单独正常运行，就一颗确信集成在一起组成整个应用时也能正常运行。这种测试叫单元测试。
 
-### 测试驱动开发 TDD
+### 如何测试
 
-### 行为驱动开发 BDD
-* SpecBDD
-* StoryBDD
+#### `单元测试`
+* 流行框架： [塞巴斯蒂安·博格曼](https://sebastian-bergmann.de/) 开发的单元测试框架 [PHPUnit](https://phpunit.de/)
+* PHPUnit 遵守 xUnit 测试架构
+* [PHPSpec](https://www/phpspec.net) 测试框架
+
+#### `测试驱动开发 TDD`
+* 编写应用代码之前先写测试
+* 先编写一些测试，然后开发相关功能；再编写一些测试，然后开发功能。一直循环下去
+* TDD 是一种迭代开发方式，小步向前，知道开发完整个应用
+
+#### `行为驱动开发 BDD`
+* `SpecBDD`
+  * 是一种单元测试,使用人类能读懂的流畅语言描述应用的实现方式
+  * 作用和 PHPUnit 一样，不过 PHPUnit 使用 xUnit 架构，而 SpecBDD 使用人类能读懂的故事描述行为
+  * 测试工具 [PHPSpec](https://www/phpspec.net)
+* `StoryBDD`
+  * 和 SpecBDD 一样也使用人类能读懂的故事。
+  * 关注更多的是整体行为而不是底层实现，也就是说 用于描述业务逻辑，而非具体的实现方式
+  * StoryBDD 测试类似于项目经理的要求(要能生成报告，然后通过Email给我)
+  * SpecBDD 测试类似于开发者的要求(这个类方法能接收一个数据数组，把数据写入pdf文件)
+  * 通常把 StoryBDD 和 SpecBDD 二者结合在一起使用，编写更全面的测试
+  * 通常和项目经理坐在一起编写 StoryBDD 测试
+  * 流行工具 [Behat](http://behat/org/)
+
+#### PHPUnit
+* PHPUnit 测试在一起组成`测试用例`(test case), 测试用例在一起组成`测试组件`(test suite)。
+* PHPUnit 会使用测试运行`程序`(test runner)运行测试组件
+* 一个测试用例是一个PHP类， 扩展自 `PHPUnit_Framework_Testcase` 类。
+* 测试用例中有一些以 test 为开头的公开方法，一个方法是一个测试，在方法中我们断言会发生特定的事情
+  * 断言可能通过，也可能失败。
+  * 我们的目标是让所有断言都通过
+* 测试用例的类名必须以 Test 结尾，所在的文件名必须以 Test.php 结尾
+
+---
+* 目录结构
+* src/ 源码
+* tests/ PHPUnit测试
+  * bootstrap.php 
+* compose.json
+* phpunit.xml /用于配置 PHPUnit 的测试运行程序
+* .travis.yml
+
+---
+* 安装
+```bash
+composer require --dev phpunit/phpunit
+```
+
+--- 
+* phpunit.xml
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         forceCoversAnnotation="false"
+        bootstrap="tests/bootstrap.php">
+
+  <php>
+    <var name="DB_DSN" value="mysql:dbname=marmot_test;host=mysql" />
+    <var name="DB_USER" value="root" />
+    <var name="DB_PASSWD" value="123456" />
+    <var name="DB_DBNAME" value="test" />
+  </php>
+  
+  <testsuites>
+    <testsuite name="Application">
+      <directory>./tests/UnitTest/src</directory>
+    </testsuite>
+  </testsuites>
+
+  <filter>
+    <whitelist processUncoveredFilesFromWhitelist="true">
+      <directory suffix=".php">./src/</directory>
+      <exclude>
+        <directory suffix=".php">./src/Log</directory>
+        <file>./src/errorConfig.php</file>
+      </exclude>
+    </whitelist>
+  </filter>
+</phpunit>
+```
+
+---
+* tests/bootstrap.php
+```php
+<?php
+
+require dirname(__DIR__) . 'vendor/autoload.php';
+```
