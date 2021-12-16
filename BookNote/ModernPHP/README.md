@@ -1,3 +1,4 @@
+  
 
 - [一、语言特性](#一-语言特性 )
   - [性状(trait)](#性状trait )
@@ -277,64 +278,66 @@ php_sapi_name() == 'cli-server'
   * `<meta charset="UTF-8">`
   
 ##  流
-  
-  
-* [流封装协议](https://www.php.net/manual/zh/wrappers.php )
+
+
+* [流封装协议](https://www.php.net/manual/zh/wrappers.php)
   * 函数
-    * file_get_contents(<img src="https://latex.codecogs.com/gif.latex?url)
-%20%20%20%20*%20fopen()
-%20%20%20%20*%20fwrite()
-%20%20%20%20*%20fclose()
-%20%20*%20file:&#x2F;&#x2F;流封装协议
-%20%20%20%20*%20隐式使用
-%20%20%20%20%20%20*%20fopen(&#x27;&#x2F;etc&#x2F;hosts&#x27;,%20&#x27;rb&#x27;)
-%20%20%20%20*%20显示使用
-%20%20%20%20%20%20*%20fopen(&#x27;file::&#x2F;&#x2F;&#x2F;etc&#x2F;hosts&#x27;,%20&#x27;rb&#x27;)
-%20%20*%20php:&#x2F;&#x2F;流封装协议
-%20%20%20%20*%20php:&#x2F;&#x2F;stdin
-%20%20%20%20%20%20*%20只读PHP流，数据来自标准输入，接收命令行传入脚本的信息
-%20%20%20%20*%20php:&#x2F;&#x2F;stdout
-%20%20%20%20%20%20*%20把数据写入当前的输出缓冲区
-%20%20%20%20%20%20*%20只能写，无法读或寻址
-%20%20%20%20*%20php:&#x2F;&#x2F;memory
-%20%20%20%20%20%20*%20从系统内存中读取数据，或者把数据写入系统内存
-%20%20%20%20%20%20*%20可用内存有限
-%20%20%20%20%20%20*%20php:&#x2F;&#x2F;temp更安全
-%20%20%20%20*%20php:&#x2F;&#x2F;temp
-%20%20%20%20%20%20*%20没有内存时，php把数据写入文件
-%20%20*%20流上下文：定制流的行为
-%20%20%20%20*%20file_get_contents()%20发送http%20post%20请求
-%20%20*%20流过滤器
+    * file_get_contents($url)
+    * fopen()
+    * fwrite()
+    * fclose()
+  * file://流封装协议
+    * 隐式使用
+      * fopen('/etc/hosts', 'rb')
+    * 显示使用
+      * fopen('file::///etc/hosts', 'rb')
+  * php://流封装协议
+    * php://stdin
+      * 只读PHP流，数据来自标准输入，接收命令行传入脚本的信息
+    * php://stdout
+      * 把数据写入当前的输出缓冲区
+      * 只能写，无法读或寻址
+    * php://memory
+      * 从系统内存中读取数据，或者把数据写入系统内存
+      * 可用内存有限
+      * php://temp更安全
+    * php://temp
+      * 没有内存时，php把数据写入文件
+  * 流上下文：定制流的行为
+    * file_get_contents() 发送http post 请求
+  * 流过滤器
 
 ```php
-&#x2F;&#x2F;file_get_contents()%20发送http%20post%20请求"/>requestBody = '{"username":"Tom"}';
-<img src="https://latex.codecogs.com/gif.latex?context%20=%20stream_context_create(array(
-%20%20%20%20&#x27;http&#x27;=&gt;array(
-%20%20%20%20%20%20%20%20&#x27;method&#x27;%20=&gt;%20&#x27;POST&#x27;,
-%20%20%20%20%20%20%20%20&#x27;header&#x27;%20=&gt;%20&#x27;Content-Type:%20application&#x2F;json;charset=utf-8;&#x5C;r&#x5C;n&quot;Content-Length:&quot;&#x27;.%20mb_strlen("/>requestBody),
-        'content' => <img src="https://latex.codecogs.com/gif.latex?requestBody
-%20%20%20%20)
+//file_get_contents() 发送http post 请求
+$requestBody = '{"username":"Tom"}';
+$context = stream_context_create(array(
+    'http'=>array(
+        'method' => 'POST',
+        'header' => 'Content-Type: application/json;charset=utf-8;\r\n"Content-Length:"'. mb_strlen($requestBody),
+        'content' => $requestBody
+    )
 ));
-set_exception_handler()"/>response = file_get_contents('xxx.com', false, <img src="https://latex.codecogs.com/gif.latex?context);
+set_exception_handler()
+$response = file_get_contents('xxx.com', false, $context);
 ```
 
-##%20%20错误和异常
+## 错误和异常
 
-###%20%20异常
+### 异常
 
-*%20[PHP标准库](https:&#x2F;&#x2F;www.php.net&#x2F;manual&#x2F;zh&#x2F;book.spl.php%20)
-*%20[PHP标准库%20exceptions](https:&#x2F;&#x2F;www.php.net&#x2F;manual&#x2F;zh&#x2F;spl.exceptions.php%20)
-*%20异常处理程序
+* [PHP标准库](https://www.php.net/manual/zh/book.spl.php)
+* [PHP标准库 exceptions](https://www.php.net/manual/zh/spl.exceptions.php)
+* 异常处理程序
 
 ```php
-set_exception_handler(function%20(Exception"/>exception) {
+set_exception_handler(function (Exception $exception) {
     //记录并处理异常
 });
-  
+
 //还原成之前的异常程序
 restore_exception_handler();
 ```
-  
+ 
 ###  错误
   
   
@@ -439,7 +442,7 @@ restore_error_handler();
   
 * [PHP Iniscan 工具](https://github.com/psecio/iniscan )
   
-###  **memroy_limit**
+###  **memory_limit**
   
   
 * 默认128M
