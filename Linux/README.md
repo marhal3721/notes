@@ -6,6 +6,7 @@
 * [k8s](#k8s)
 * [NPM](#npm)
 * [virtualbox 配置ubuntu固定ip](#virtualbox-ubuntu-ip)
+* [virtualbox挂载目录](#virtualbox-ubuntu-mount)
 
 ## <a id="Linux">Linux Command</a>
 
@@ -200,3 +201,17 @@ nameserver 114.114.114.114
 ```bash
 marhal@marhal:~$ source ~/.bashrc
 ```
+
+## <a id="virtualbox-ubuntu-mount">virtualbox挂载目录</a>
+
+### 在主界面设置好挂载信息
+
+![img.png](img/img.png)
+
+### 命令
+```bash
+### 格式
+### sudo mount -t vboxsf 共享文件夹名称（在设置页面设置的） 挂载的目录
+:~$ sudo mount -t vboxsf test /var/www/html/test
+```
+
