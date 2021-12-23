@@ -147,7 +147,7 @@ kubectl logs -f credit-portal-6557fc89bf-x6l2t -n=credit-ty -c=phpfpm
 ```
 
 
-## <a id="npm">NPM Command</a>virtualbox-ubuntu-ip
+## <a id="npm">NPM Command</a>
 
 ```bash
 # 注册模块镜像
