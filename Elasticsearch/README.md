@@ -455,5 +455,27 @@ curl --location --request GET '192.168.3.70:9200/marhal/_search' \
         }
     }
 }'
+
+curl --location --request GET '192.168.3.70:9200/marhal/_search' \
+--header 'User-Agent: Apipost client Runtime/+https://www.apipost.cn/' \
+--header 'Content-Type: application/json' \
+--data '{
+    "query" :{
+        "match" :{
+            "a【key】" : "1【value】"
+        },
+        
+    },
+    "_source【查询指定字段】" : ["a"],
+    "sort【排序】": [
+        {
+           "a【key】": {
+               "order【排序规则】": "desc|asc"
+           }
+        }
+    ],
+    "from【页数】": 0,
+    "size【条数】": 2
+}'
 ```
 
