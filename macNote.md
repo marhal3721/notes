@@ -103,3 +103,7 @@ alias gst='git status'
 alias drmf = 'docker rm -f $(docker ps -a -q)'
 alias drm = 'docker rm -f $(docker ps -a -q)'
 ```
+## idea
+```text
+https://plugins.zhile.io
+```
