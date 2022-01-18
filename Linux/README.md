@@ -7,6 +7,7 @@
 * [NPM](#npm)
 * [virtualbox 配置ubuntu固定ip](#virtualbox-ubuntu-ip)
 * [virtualbox挂载目录](#virtualbox-ubuntu-mount)
+* [shell脚本：Syntax error: Bad for loop variable, dash转bash](#dash-bash)
 
 ## <a id="Linux">Linux Command</a>
 
@@ -503,4 +504,22 @@ root@marhal:~# df -h
 # tmpfs                              5.0M     0  5.0M   0% /run/lock
 # tmpfs                              489M     0  489M   0% /sys/fs/cgroup
 # /dev/sda2                          976M  205M  705M  23% /boot
+```
+
+## <a id="dash-bash">dash-bash</a>
+```bash
+## 从 ubuntu 6.10 开始，ubuntu 就将先前默认的bash shell 更换成了dash shell；
+## 表现为 /bin/sh 链接到了/bin/dash 而不是传统的 /bin/bash
+## dash不支持C语言格式的for循环写法
+marhal@marhal:~$ ls -l /bin/sh
+## lrwxrwxrwx 1 root root 4 Aug 24 16:42 /bin/sh -> dash
+
+# 将默认shell更改为bash
+marhal@marhal:~$ sudo dpkg-reconfigure dash
+# 在弹出的框选择 No
+## Removing 'diversion of /bin/sh to /bin/sh.distrib by dash'
+## Adding 'diversion of /bin/sh to /bin/sh.distrib by bash'
+## Removing 'diversion of /usr/share/man/man1/sh.1.gz to /usr/share/man/man1/sh.distrib.1.gz by dash'
+## Adding 'diversion of /usr/share/man/man1/sh.1.gz to /usr/share/man/man1/sh.distrib.1.gz by bash'
+
 ```
