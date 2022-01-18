@@ -1,3 +1,5 @@
+[TOC]
+
 # Install-ubuntu
 [OfficeDocs](https://www.elastic.co/guide/en/elasticsearch/reference/7.16/deb.html#deb-repo)
 ```bash
@@ -74,7 +76,7 @@ vim ../config/kibana.yml
 # i18n.locale: "zh-CN"
 # server.host: "0.0.0.0" # 外网访问
 # elasticsearch.hosts: ["http://127.0.0.1:9200"]
-# server.publicBaseUrl: "http://172.31.240.57:5601"
+# server.publicBaseUrl: "http://192.168.3.70:5601"
 nohup ./kibana > /home/marhal/kibana-nohup.log 2>&1 &
 ```
 
