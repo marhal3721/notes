@@ -444,3 +444,7 @@
 
 ### 2.研发流程闭环
 ![](ysbh.png)
+
+### 3.[《微服务架构设计模式》的一点总结](https://mp.weixin.qq.com/s/TLZR252J7EHcR8h_vEsXrA)
+### 4.[为什么强烈建议你不要做联表查询？](https://mp.weixin.qq.com/s/NeR8hNd0zrPflYqQd_6i-w)
+* 相关知识：《高性能MySQL 第三版》 6.3.3章节 
