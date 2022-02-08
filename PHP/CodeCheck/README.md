@@ -28,6 +28,10 @@ vendor/bin/phpunit --stop-on-failure --log-junit junit.xml --coverage-text=cover
 # phploc 测量PHP项目大小和分析结构
 * [phploc](https://packagist.org/packages/phploc/phploc)
 
+```bash
+vendor/bin/phploc src --log-xml=srcloc.xml
+```
+
 # pdepend 软件分析器和度量工具
 * [pdepend](https://packagist.org/packages/pdepend/pdepend)
 * [Doc](https://pdepend.org/documentation/getting-started.html)

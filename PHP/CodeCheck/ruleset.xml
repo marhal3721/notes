@@ -11,9 +11,9 @@
         <!-- Excluding static-access since it generates a lot of false-positives on namespaced classes -->
         <exclude name="StaticAccess" />
     </rule>
-    <!-- <rule ref="vendor/phpmd/phpmd/src/main/resources/rulesets/codesize.xml" /> -->
+    <rule ref="vendor/phpmd/phpmd/src/main/resources/rulesets/codesize.xml" />
     <rule ref="vendor/phpmd/phpmd/src/main/resources/rulesets/controversial.xml" />
-    <rule ref="vendor/phpmd/phpmd/src/main/resources/rulesets/design.xml"></rule>
+    <rule ref="vendor/phpmd/phpmd/src/main/resources/rulesets/design.xml" />
     <rule ref="vendor/phpmd/phpmd/src/main/resources/rulesets/naming.xml/ShortVariable">
         <properties>
             <!--

@@ -3,12 +3,14 @@
     <description>The coding standard for saas.</description>
     <!-- 应用代码文件夹 -->
     <file>app/Services/ElectronicsInvoice</file>
+    <!-- 单元测试文件 -->
+    <file>tests</file>
 
     <!-- 报告格式为完整 -->
     <arg name="report" value="full"/>
     <!-- 报告格式为简报 -->
-    <!--<arg name="report" value="summary"/>-->
-    <!-- 现实进度 -->
+    <arg name="report" value="summary"/>
+    <!-- 显示进度 -->
     <arg value="p"/>
     <!-- 让输出显示颜色,默认输出是无色 -->
     <arg value="-colors"/>

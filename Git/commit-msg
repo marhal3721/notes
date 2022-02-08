@@ -1,0 +1,13 @@
+#!/bin/bash
+# 提交格式 #-0000-docs|unittest|pseudocode|msg|bug-xxx
+RED='\033[31m'
+GREEN='\033[32m'
+
+awk '{printf("%s",$0)}' $1 | egrep "^#[[:digit:]]*-(docs-[^ ].*|unittest-[^ ].*|pseudocode-[^ ].*|msg-[^ ].*|bug-[^ ].*)$" > /dev/null 2>&1
+
+if [ $? -ne 0 ];then
+  echo -e "message check ${RED}fail${NORMAL}"
+  exit 1
+fi
+  echo -e "message check ${GREEN}success${NORMAL}"
+exit 0
