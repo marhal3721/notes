@@ -9,14 +9,14 @@ vendor/bin/phpcs --report-file=cs-report.txt
 * [phpmd](https://packagist.org/packages/phpmd/phpmd)
 
 ```bash
-php -d memory_limit=-1 vendor/bin/phpcpd [dirs] tests --log-pmd=cpd-log.xml
+vendor/bin/phpmd [dirs] text ruleset.xml --reportfile md-src-report.txt
 ```
 
 # cpd
 * [phpcpd](https://packagist.org/packages/sebastian/phpcpd)
 
 ```bash
-vendor/bin/phpmd [dirs] text ruleset.xml --reportfile md-src-report.txt
+php -d memory_limit=-1 vendor/bin/phpcpd [dirs] tests --log-pmd=cpd-log.xml
 ```
 # unit
 * [phpunit](https://packagist.org/packages/phpunit/phpunit)
@@ -30,6 +30,7 @@ vendor/bin/phpunit --stop-on-failure --log-junit junit.xml --coverage-text=cover
 
 ```bash
 vendor/bin/phploc src --log-xml=srcloc.xml
+vendor/bin/phploc tests --log-xml=testsloc.xml
 ```
 
 # pdepend 软件分析器和度量工具
