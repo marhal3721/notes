@@ -7,7 +7,10 @@
 * [NPM](#npm)
 * [virtualbox 配置ubuntu固定ip](#virtualbox-ubuntu-ip)
 * [virtualbox挂载目录](#virtualbox-ubuntu-mount)
-* [shell脚本：Syntax error: Bad for loop variable, dash转bash](#dash-bash)
+* [shell脚本：Syntax error: Bad for loop variable, dash转bash](#dash2bash)
+* [linux-windows 文件格式问题](#filestype)
+  * [查看文件格式](#filestype1)
+  * [docs 转 unix](#filestype2)
 
 ## <a id="Linux">Linux Command</a>
 
@@ -506,7 +509,7 @@ root@marhal:~# df -h
 # /dev/sda2                          976M  205M  705M  23% /boot
 ```
 
-## <a id="dash-bash">dash-bash</a>
+## <a id="dash2bash">dash-bash</a>
 ```bash
 ## 从 ubuntu 6.10 开始，ubuntu 就将先前默认的bash shell 更换成了dash shell；
 ## 表现为 /bin/sh 链接到了/bin/dash 而不是传统的 /bin/bash
@@ -521,5 +524,37 @@ marhal@marhal:~$ sudo dpkg-reconfigure dash
 ## Adding 'diversion of /bin/sh to /bin/sh.distrib by bash'
 ## Removing 'diversion of /usr/share/man/man1/sh.1.gz to /usr/share/man/man1/sh.distrib.1.gz by dash'
 ## Adding 'diversion of /usr/share/man/man1/sh.1.gz to /usr/share/man/man1/sh.distrib.1.gz by bash'
+
+```
+
+## <a id="filestype">linux-windows 文件格式问题</a>
+
+### <a id="filestype1">查看文件格式</a>
+```bash
+# 查看文件格式
+cat -A filename
+## dos格式的文件行尾为^M$，unix格式的文件行尾为$
+
+
+vi filename
+## 打开文件，执行 : set ff，如果文件为dos格式在显示为fileformat=dos，如果是unxi则显示为fileformat=unix
+
+od -t x1 filename
+## 输出内容中存在0d 0a,是dos格式
+## 如果只有0a，则是unix格式
+```
+
+### <a id="filestype2">docs 转 unix</a>
+
+```bash
+# docs 转 unix
+## 方法一
+sed -i "s/\r//" filename
+## 方法二
+vim filename
+### 进入filename后在底部模式下， 执行:set fileformat=unix后执行:x或者:wq保存修改。
+## 方法三：使用dos2unix 
+sudo apt-get install dos2unix 
+dos2unix filename
 
 ```
