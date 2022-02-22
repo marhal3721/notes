@@ -129,3 +129,59 @@ AND TABLE_NAME NOT IN (
     AND t.table_schema = 'your database name'
 );
 ```
+
+* 查看库容量
+
+* 1.查看所有数据库的容量
+
+```sql
+select
+table_schema as '数据库',
+sum(table_rows) as '记录数',
+sum(truncate(data_length/1024/1024, 2)) as '数据容量(MB)',
+sum(truncate(index_length/1024/1024, 2)) as '索引容量(MB)'
+from information_schema.tables
+group by table_schema
+order by sum(data_length) desc, sum(index_length) desc;
+
+```
+
+* 2.查看指定数据库、表的容量
+
+```sql
+select
+table_schema as '数据库',
+table_name as '表名',
+table_rows as '记录数',
+truncate(data_length/1024/1024, 2) as '数据容量(MB)',
+truncate(index_length/1024/1024, 2) as '索引容量(MB)'
+from information_schema.tables
+where table_schema='数据库名' and table_name='表名'
+order by data_length desc, index_length desc;
+```
+
+* 3.查看指定数据库的容量
+
+```sql
+select
+table_schema as '数据库',
+sum(table_rows) as '记录数',
+sum(truncate(data_length/1024/1024, 2)) as '数据容量(MB)',
+sum(truncate(index_length/1024/1024, 2)) as '索引容量(MB)'
+from information_schema.tables
+where table_schema='数据库名';
+
+```
+
+* 4.查看所有库各表的容量
+
+```sql
+select
+table_schema as '数据库',
+table_name as '表名',
+table_rows as '记录数',
+truncate(data_length/1024/1024, 2) as '数据容量(MB)',
+truncate(index_length/1024/1024, 2) as '索引容量(MB)'
+from information_schema.tables
+order by data_length desc, index_length desc;
+```
