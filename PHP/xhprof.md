@@ -60,6 +60,7 @@ sudo vim /etc/php/7.4/cli/php.ini
 ```
 
 * nginx
+
 ```bash
 sudo vim /etc/nginx/sites-available/xhprof
 sudo ln -s /etc/nginx/sites-available/xhprof /etc/nginx/sites-available/
