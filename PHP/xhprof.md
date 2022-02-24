@@ -90,6 +90,7 @@ server {
 ## 请求
 
 * index.php
+
 ```php
 <?php
 
