@@ -8,6 +8,10 @@
     - [设置最允许导入值](#设置最允许导入值)
     - [导出](#导出)
     - [全文索引](#全文索引)
+    - [查看数据库中那些表有主键](#查看数据库中那些表有主键)
+    - [查看数据库中那些表没有主键](#查看数据库中那些表没有主键)
+    - [查看库容量](#查看库容量)
+    - [不连续索引](#不连续索引)
 
 
 ## <a id="mysql">mysql</a>
@@ -72,23 +76,27 @@ sudo chown -R mysql:mysql /var/lib/mysql-files/
 
 * <a id="全文索引">全文索引</a> [官方文档](https://dev.mysql.com/doc/refman/5.7/en/fulltext-boolean.html)
     * 查找字符长度受innodb_ft_max_token_size和innodb_ft_min_token_size影响
+
 ```sql
 CREATE FULLTXT INDEX ft_idx_name ON `tableNname`(`columnName`);
 ```
 
 * 全文索引使用 ngram 解释器
     * 查找字符长度受ngram_token_size影响
+
 ```sql
 CREATE FULLTXT INDEX ft_idx_name ON `tableNname`(`columnName`) WITH PARSER NGRAM;
 ```
 
 * 全文索引查询语法
+
 ```sql
 SELECT * FROM comments WHERE MATCH (contents) AGAINST ('+47 +90' IN BOOLEAN MODE);
 SELECT * FROM comments WHERE MATCH (contents) AGAINST ('47 90' IN NATURAL LANGUAGE MODE);
 ```
 
-* 查看数据库中那些表有主键
+* <a id="查看数据库中那些表有主键">查看数据库中那些表有主键</a>
+
 ```sql
 select t1.table_schema,t1.table_name from information_schema.tables t1 
 left outer join
@@ -98,7 +106,7 @@ on t1.table_schema = t2.TABLE_SCHEMA  and t1.table_name = t2.TABLE_NAME  and t2.
 where t2.table_name is not null and t1.TABLE_SCHEMA not in ('information_schema','performance_schema','test','mysql', 'sys');
 ```
 
-* 查看数据库中那些表没有主键
+* <a id="查看数据库中那些表没有主键">查看数据库中那些表没有主键</a>
 ```sql
 select t1.table_schema,t1.table_name from information_schema.tables t1 
 left outer join
@@ -130,7 +138,7 @@ AND TABLE_NAME NOT IN (
 );
 ```
 
-* 查看库容量
+* <a id="查看库容量">查看库容量</a>
 
 * 1.查看所有数据库的容量
 
@@ -184,4 +192,9 @@ truncate(data_length/1024/1024, 2) as '数据容量(MB)',
 truncate(index_length/1024/1024, 2) as '索引容量(MB)'
 from information_schema.tables
 order by data_length desc, index_length desc;
+```
+
+* <a id="不连续索引">不连续索引</a>
+```sql
+select id from (select id from `company_user` order by id asc) t where not exists (select 1 from `company_user` where id=t.id-1)
 ```
