@@ -11,6 +11,8 @@
 * [linux-windows 文件格式问题](#filestype)
   * [查看文件格式](#filestype1)
   * [docs 转 unix](#filestype2)
+* [virtualbox安装centos镜像后无网络解决](#centosvbnetwork)
+* [centos软件安装源地址](#centosrepository)
 
 ## <a id="Linux">Linux Command</a>
 
@@ -557,4 +559,30 @@ vim filename
 sudo apt-get install dos2unix 
 dos2unix filename
 
+```
+
+## <a id="centosvbnetwork">virtualbox安装镜像后无网络解决</a>
+
+### 镜像下载地址
+* [Download](http://mirror.nsc.liu.se/centos-store/)
+
+```bash
+vi /etc/sysconfig/network-scripts/ifcfg-enp0s3
+
+# ONBOOT=no 改完 ONBOOT=yes
+```
+
+## <a id="centosrepository">centos软件安装源地址</a>
+```text
+https://ftp.sjtu.edu.cn/centos/8-stream/BaseOS/x86_64/os/
+https://mirrors.aliyun.com/centos/8-stream/BaseOS/x86_64/os/
+https://mirrors.ustc.edu.cn/centos/8-stream/BaseOS/x86_64/os/
+https://mirrors.njupt.edu.cn/centos/8-stream/BaseOS/x86_64/os/
+https://mirrors.163.com/centos/8-stream/BaseOS/x86_64/os/
+https://mirrors.huaweicloud.com/centos/8-stream/BaseOS/x86_64/os/
+https://mirrors.tuna.tsinghua.edu.cn/centos/8-stream/BaseOS/x86_64/os/
+https://mirrors.neusoft.edu.cn/centos/8-stream/BaseOS/x86_64/os/
+https://mirrors.cqu.edu.cn/centos/8-stream/BaseOS/x86_64/os/
+https://mirrors.bfsu.edu.cn/centos/8-stream/BaseOS/x86_64/os/
+https://mirrors.nju.edu.cn/centos/8-stream/BaseOS/x86_64/os/
 ```
