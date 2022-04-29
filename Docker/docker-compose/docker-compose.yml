@@ -1,0 +1,37 @@
+version: "3"
+services:
+  phpfpm:
+    image: "registry.cn-hangzhou.aliyuncs.com/marhal/php-7.4.26"
+    ports:
+      - "8089:80"
+    links:
+      - "nginx"
+    volumes:
+      - ./:/var/www/html/:cached
+    cap_add:
+      - SYS_PTRACE
+    environment:
+        - APP_ENV=dev
+    networks:
+        - database
+        - default
+        - application
+    container_name: backend-phpfpm
+  mysql:
+    image: "registry.cn-hangzhou.aliyuncs.com/marmot/mysql-5.7"
+    volumes:
+      - ./mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+    networks:
+      - database
+    container_name: hz-mysql
+  nginx:
+    image: ""
+
+
+networks:
+  database:
+    external: true
+  application:
+    external: true
