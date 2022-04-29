@@ -117,7 +117,7 @@ $connect = oci_connect('MARHAL', '123456', 'docker.for.mac.host.internal:49161/X
 ## <a id="Dockerfile-push">Dockerfile 构建镜像并推送</a>
 ```bash
 docker build . -t nginx-1
-docker run docker run -itd --name nginx-a -p 8061:80 nginx-1
+docker run -itd --name nginx-a -p 8061:80 nginx-1
 # 登录远程仓库并输入密码
 docker login --username=junwuji555@sina.com registry.cn-hangzhou.aliyuncs.com
 # 打标签

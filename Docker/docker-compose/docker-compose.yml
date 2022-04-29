@@ -1,11 +1,9 @@
 version: "3"
 services:
   phpfpm:
-    image: "registry.cn-hangzhou.aliyuncs.com/marhal/php-7.4.26"
-    ports:
-      - "8089:80"
+    image: "registry.cn-hangzhou.aliyuncs.com/marhal/php-7.4.26:end"
     links:
-      - "nginx"
+      - mysql
     volumes:
       - ./:/var/www/html/:cached
     cap_add:
@@ -16,20 +14,28 @@ services:
         - database
         - default
         - application
-    container_name: backend-phpfpm
+    container_name: marhal-phpfpm
   mysql:
-    image: "registry.cn-hangzhou.aliyuncs.com/marmot/mysql-5.7"
+    image: "registry.cn-hangzhou.aliyuncs.com/marhal/mysql-5.7:v1.0.0"
     volumes:
       - ./mysql:/var/lib/mysql
     environment:
       - MYSQL_ROOT_PASSWORD=123456
     networks:
       - database
-    container_name: hz-mysql
+    container_name: marhal-mysql
   nginx:
-    image: ""
-
-
+    image: "registry.cn-hangzhou.aliyuncs.com/marhal/nginx:0.1.4"
+    ports:
+      - "18010:80"
+    links:
+      - "phpfpm"
+    volumes:
+      - ./:/var/www/html/
+    networks:
+      - application
+      - default
+    container_name: marhal-nginx
 networks:
   database:
     external: true
