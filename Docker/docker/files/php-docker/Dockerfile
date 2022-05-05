@@ -18,8 +18,8 @@ RUN useradd www -u 1200 -M -s /sbin/nologin  \
     --with-config-file-path=/usr/local/$PHP_VERSION/etc \
     --with-config-file-scan-dir=/usr/local/$PHP_VERSION/etc/conf.d \
     --enable-fpm \
-    --with-fpm-user=www \
-    --with-fpm-group=www \
+    --with-fpm-user=www-data \
+    --with-fpm-group=www-data \
     --without-pdo-sqlite \
     --without-sqlite3  \
     --enable-mysqlnd  \
@@ -75,6 +75,7 @@ RUN useradd www -u 1200 -M -s /sbin/nologin  \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
     && rm -rf /usr/local/src/$PHP_VERSION
 
+COPY www.conf /usr/local/$PHP_VERSION/etc/php-fpm.d/
 ENV PATH /usr/local/$PHP_VERSION/sbin/:$PATH
 ENTRYPOINT ["php-fpm","-F"]
 

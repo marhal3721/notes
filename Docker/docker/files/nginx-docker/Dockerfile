@@ -36,9 +36,9 @@ ARG DEBIAN_FRONTEND=noninteractive
 # /bin/sh: 1: make: not found
 # make
 
-RUN addgroup --system --gid 101 nginx \
+RUN addgroup --system --gid 101 www-data \
     && mkdir /nonexistent \
-    && adduser --system --disabled-login --ingroup nginx --no-create-home --home /nonexistent --gecos "nginx user" --shell /bin/false --uid 101 nginx \
+    && adduser --system --disabled-login --ingroup www-data --no-create-home --home /nonexistent --gecos "nginx user" --shell /bin/false --uid 101 www-data \
     && apt-get update \
     && apt-get install -y wget \
     && apt-get install -y gcc \

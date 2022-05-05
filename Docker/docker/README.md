@@ -40,6 +40,10 @@ docker-compose up -d --force-recreate
 # --sig-proxy=false来确保CTRL-D或CTRL-C不会关闭容器
 docker attach --sig-proxy=false mynginx
 
+# 查看网络
+docker network ls
+docker network inspect bridge
+
 
 # 删除未运行的容器（正在运行的删除会）
 docker rm $(docker ps -a -q) 

@@ -1,7 +1,7 @@
 version: "3"
 services:
   phpfpm:
-    image: "registry.cn-hangzhou.aliyuncs.com/marhal/php-7.4.26:end"
+    image: "registry.cn-hangzhou.aliyuncs.com/marhal/php-7.4.26:v1.0.1"
     links:
       - mysql
     volumes:
@@ -25,7 +25,7 @@ services:
       - database
     container_name: marhal-mysql
   nginx:
-    image: "registry.cn-hangzhou.aliyuncs.com/marhal/nginx:0.1.4"
+    image: "registry.cn-hangzhou.aliyuncs.com/marhal/nginx-official:v1.0.1"
     ports:
       - "18010:80"
     links:

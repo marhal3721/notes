@@ -64,6 +64,12 @@ sed '/^$/d' [file]
 ## 查看端口
 netstat -ntlp | grep LISTEN
 netstat -an | grep 5601
+
+## ping端口
+yum install -y telnet
+apt install -y telnet
+telnet [ip] [port]
+telnet 172.0.0.1 9000
 ```
 
 ## <a id="win10-Linux">win10下ubuntu子系统与windows的目录影射</a>
