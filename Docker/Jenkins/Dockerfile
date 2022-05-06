@@ -1,0 +1,1 @@
+FROM jenkinsci/blueocean:1.25.3
