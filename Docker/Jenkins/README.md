@@ -1,4 +1,4 @@
-## Docker install（推荐）
+## Docker install（本地测试用这个就够了）
 
 ### 
 ```bash
@@ -50,7 +50,7 @@ sed -i 's#http://updates.jenkins-ci.org/download#https://mirrors.tuna.tsinghua.e
 http://172.16.1.32:8080/
 ```
 
-## Centos install with yum
+## Centos install with yum （线上因为要处理别的事情应该要直接部署）
 ```bash
 wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
 rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
