@@ -8,7 +8,7 @@ docker run -itd --name jenkins-a -p 8082:8080 jenkins-1
 docker exec jenkins-a bash -c "cat /var/jenkins_home/secrets/initialAdminPassword"
 ```
 
-## Centos install
+## Centos install with jar
 
 ### 1.下载java环境
 ```bash
@@ -49,5 +49,31 @@ sed -i 's#http://updates.jenkins-ci.org/download#https://mirrors.tuna.tsinghua.e
 ```text
 http://172.16.1.32:8080/
 ```
+
+## Centos install with yum
+```bash
+wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+yum install jenkins -y
+systemctl start jenkins
+systemctl enable jenkins
+sed -i 's/http:\/\/updates.jenkins-ci.org\/download/https:\/\/mirrors.tuna.tsinghua.edu.cn\/jenkins/g' /var/lib/jenkins/updates/default.json 
+sed -i 's/http:\/\/www.google.com/https:\/\/www.baidu.com/g' /var/lib/jenkins/updates/default.json
+
+```
+
+## 插件
+* Localization: Chinese (Simplified)
+* Localization Support Plugin
+* Locale plugin
+* Authentication Tokens API Plugin
+* Rebuilder
+* Role-based Authorization Strategy
+* SSH Build Agents plugin
+* SSH plugin
+* Generic Webhook Trigger Plugin
+* Web for Blue Ocean
+* Pipeline Utility Steps
+* SSH Pipeline Steps
 
 
