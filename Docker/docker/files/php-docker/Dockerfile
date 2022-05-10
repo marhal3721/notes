@@ -18,8 +18,8 @@ RUN useradd www -u 1200 -M -s /sbin/nologin  \
     --with-config-file-path=/usr/local/$PHP_VERSION/etc \
     --with-config-file-scan-dir=/usr/local/$PHP_VERSION/etc/conf.d \
     --enable-fpm \
-    --with-fpm-user=www-data \
-    --with-fpm-group=www-data \
+    --with-fpm-user=www \
+    --with-fpm-group=www \
     --without-pdo-sqlite \
     --without-sqlite3  \
     --enable-mysqlnd  \
@@ -65,6 +65,7 @@ RUN useradd www -u 1200 -M -s /sbin/nologin  \
     && sed -i "s/;openssl.cafile=/openssl.cafile=\/usr\/lib\/ssl\/cacert.pem/g" /usr/local/php-7.4.26/etc/php.ini \
     && cp /usr/local/$PHP_VERSION/etc/php-fpm.conf.default /usr/local/$PHP_VERSION/etc/php-fpm.conf \
     && cp /usr/local/$PHP_VERSION/etc/php-fpm.d/www.conf.default /usr/local/$PHP_VERSION/etc/php-fpm.d/www.conf \
+    && sed -i 's/listen = 127.0.0.1:9000/listen = [::]:9000/' /usr/local/$PHP_VERSION/etc/php-fpm.d/www.conf \
     && php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');" \
     && php composer-setup.php --install-dir=/usr/local/bin --filename=composer  \
     && chmod +x /usr/local/bin/composer \
@@ -75,7 +76,6 @@ RUN useradd www -u 1200 -M -s /sbin/nologin  \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
     && rm -rf /usr/local/src/$PHP_VERSION
 
-COPY www.conf /usr/local/$PHP_VERSION/etc/php-fpm.d/
 ENV PATH /usr/local/$PHP_VERSION/sbin/:$PATH
 ENTRYPOINT ["php-fpm","-F"]
 

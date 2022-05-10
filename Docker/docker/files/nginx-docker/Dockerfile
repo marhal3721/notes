@@ -90,7 +90,9 @@ RUN addgroup --system --gid 101 www-data \
     && make install \
     && apt-get -y remove wget make gcc \
     && rm -rf /usr/local/src/$NG_VERSION \
-    && cp /etc/nginx/nginx.conf /etc/nginx/nginx.default.bak
+    && cp /etc/nginx/nginx.conf /etc/nginx/nginx.default.bak \
+    && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+    && echo "Asia/Shanghai" > /etc/timezone \
 
 # 自定义配置文件
 COPY nginx_conf/nginx.conf /etc/nginx/
