@@ -75,5 +75,6 @@ sed -i 's/http:\/\/www.google.com/https:\/\/www.baidu.com/g' /var/lib/jenkins/up
 * Web for Blue Ocean
 * Pipeline Utility Steps
 * SSH Pipeline Steps
+* git parameter
 
 
