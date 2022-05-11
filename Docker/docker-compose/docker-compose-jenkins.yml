@@ -1,0 +1,49 @@
+version: "3"
+services:
+  phpfpm:
+    image: "registry.cn-hangzhou.aliyuncs.com/marhal/php-7.4.26:latest"
+    user: 0:0
+    links:
+      - mysql
+    cap_add:
+      - SYS_PTRACE
+    environment:
+      - APP_ENV=dev
+      - TZ=Asia/Shanghai
+      - TIME_ZONE=Asia/Shanghai
+    networks:
+      - phpfpm-mysql
+      - default
+      - nginx-phpfpm
+    container_name: marhal-phpfpm-web
+  mysql:
+    image: "registry.cn-hangzhou.aliyuncs.com/marhal/mysql-5.7:v1.0.0"
+    user: 0:0
+    volumes:
+      - ./mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+      - TZ=Asia/Shanghai
+      - TIME_ZONE=Asia/Shanghai
+    networks:
+      - phpfpm-mysql
+    container_name: marhal-mysql-web
+  nginx:
+    image: "registry.cn-hangzhou.aliyuncs.com/marhal/nginx-official:v1.0.1"
+    ports:
+      - "18012:80"
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+      - TZ=Asia/Shanghai
+      - TIME_ZONE=Asia/Shanghai
+    links:
+      - "phpfpm"
+    networks:
+      - nginx-phpfpm
+      - default
+    container_name: marhal-nginx-web
+networks:
+  phpfpm-mysql:
+    external: true
+  nginx-phpfpm:
+    external: true
