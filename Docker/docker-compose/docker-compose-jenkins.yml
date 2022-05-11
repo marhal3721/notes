@@ -6,7 +6,7 @@ services:
     links:
       - mysql
     volumes:
-      - asset-volume:/var/www/html
+      - phpfilevolumes:/var/www/html
     cap_add:
       - SYS_PTRACE
     environment:
@@ -47,7 +47,8 @@ services:
       - default
     container_name: marhal-nginx-web
 volumes:
-  asset-volume:
+  phpfilevolumes:
+    driver: local
 networks:
   phpfpm-mysql:
     external: true
