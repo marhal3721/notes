@@ -29,7 +29,7 @@ services:
       - phpfpm-mysql
     container_name: marhal-mysql-web
   nginx:
-    image: "registry.cn-hangzhou.aliyuncs.com/marhal/nginx-official:v1.0.1"
+    image: "registry.cn-hangzhou.aliyuncs.com/marhal/nginx-official:thinkphp-v1.0.0"
     ports:
       - "18012:80"
     environment:
