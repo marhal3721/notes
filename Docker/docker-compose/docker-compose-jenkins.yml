@@ -35,7 +35,7 @@ services:
     ports:
       - "18012:80"
     volumes:
-      - ./nginx_web:/var/www/html
+      - phpfilevolumes:/var/www/html
     environment:
       - MYSQL_ROOT_PASSWORD=123456
       - TZ=Asia/Shanghai
