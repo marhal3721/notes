@@ -6,7 +6,7 @@ services:
     links:
       - mysql
     volumes:
-      - ./phpfpm_web:/var/www/html/
+      - ./phpfpm_web:/var/www/html
     cap_add:
       - SYS_PTRACE
     environment:
@@ -35,7 +35,7 @@ services:
     ports:
       - "18012:80"
     volumes:
-      - ./nginx_web:/var/www/html/
+      - ./nginx_web:/var/www/html
     environment:
       - MYSQL_ROOT_PASSWORD=123456
       - TZ=Asia/Shanghai
