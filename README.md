@@ -13,11 +13,11 @@
 - [Marhal](https://blog.csdn.net/qq_38157006)
 
 # 最好的科学上网服务：
-> https://xiyou4you.us/r/?s=16426259
+> [西游VPN](https://xiyou4you.us/r/?s=16426259)
 
 ---
 
-> Plan
+# Plan
 
 |Year|Month|Book|Speed|Page|
 |---|---|---|---|---|
@@ -40,3 +40,4 @@
 |2022| |四步创业法|0%| |
 |2022| |企业级DevOps工具与技术实战|0%| |
 |2022| |Unix编程艺术|0%| |
+|2022| |敏捷革命|100%| |
