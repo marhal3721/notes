@@ -307,7 +307,7 @@
 
 ### 运维
 #### 环境
-* `CI/DI` Docker+Docker Compose + k8s + jenkins
+* `CI/CD` Docker+Docker Compose + k8s + jenkins
   * 镜像单独构建
     * nginx
     * phpfpm
@@ -353,7 +353,7 @@
   * 磁盘增长率监控
   * ...
 
-#### CI/DI 流程图
+#### CI/CD 流程图
 ![](CI_CD.png)
 
 ### 团队改善
