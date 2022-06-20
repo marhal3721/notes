@@ -9,7 +9,7 @@ sudo cp /etc/vsftpd.conf /etc/vsftpd.conf.bak
 #  建立用户配置目录
 mkdir -p /etc/vsftpd/userconf
 # 编辑配置文件
-sudo vim /etc/vsftpd.config
+sudo vim /etc/vsftpd.conf
 ```
 
 ## 开启或者增加以下配置
@@ -43,9 +43,9 @@ sudo passwd myWebUser
 # 设置ftp目录用户权限
 sudo chown -R myWebUser:myWebUser /var/www/html/myWeb
 # 添加vsftpd 登录用户
-sudo touch /etc/vsftpd.chroot_list
+sudo touch /etc/vsftpd.user_list
 # 编辑
-sudo vim /etc/vsftpd.chroot_list
+sudo vim /etc/vsftpd.user_list
 
 # 写入用户名，一行一个
 # myWebUser
