@@ -13,6 +13,7 @@
   * [docs 转 unix](#filestype2)
 * [virtualbox安装centos镜像后无网络解决](#centosvbnetwork)
 * [centos软件安装源地址](#centosrepository)
+* [ssh Error :Host key verification failed.](#HostKeyVerificationFailed)
 
 ## <a id="Linux">Linux Command</a>
 
@@ -591,4 +592,14 @@ https://mirrors.neusoft.edu.cn/centos/8-stream/BaseOS/x86_64/os/
 https://mirrors.cqu.edu.cn/centos/8-stream/BaseOS/x86_64/os/
 https://mirrors.bfsu.edu.cn/centos/8-stream/BaseOS/x86_64/os/
 https://mirrors.nju.edu.cn/centos/8-stream/BaseOS/x86_64/os/
+
+https://mirrors.aliyun.com/centos/8/BaseOS/x86_64/os/
+https://mirrors.aliyun.com/centos/8/AppStream/x86_64/os/
+
+
+```
+
+## <a id="HostKeyVerificationFailed">Host key verification failed.</a>
+```bash
+ssh-keygen -R [ip]
 ```
