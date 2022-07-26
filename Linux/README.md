@@ -1,5 +1,6 @@
 * [Linux](#Linux)
 * [win10下ubuntu子系统与windows的目录影射](#win10-Linux)
+* [win10查看端口占用](#win10-port)
 * [ubuntu时区设置](#ubuntu-date)
 * [Curl](#curl)
 * [SSH](#ssh)
@@ -72,6 +73,18 @@ apt install -y telnet
 telnet [ip] [port]
 telnet 172.0.0.1 9000
 ```
+
+## <a id="win10-port">win10查看端口占用</a>
+```bash
+PS C:\Users\penk009> netstat -aon|findstr 3306
+  TCP    127.0.0.1:3306         0.0.0.0:0              LISTENING       4352
+  TCP    [::1]:3306             [::]:0                 LISTENING       14900
+PS C:\Users\penk009> tasklist|findstr 4352
+  mysqld.exe                    4352 Services                   0     48,536 K
+  
+# 去“服务”查找mysqld.exe
+```
+
 
 ## <a id="win10-Linux">win10下ubuntu子系统与windows的目录影射</a>
 ```
