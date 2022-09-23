@@ -62,6 +62,21 @@ sed -i 's/http:\/\/www.google.com/https:\/\/www.baidu.com/g' /var/lib/jenkins/up
 
 ```
 
+## Ubuntu install with apt
+```bash
+# 首先将密钥添加到系统
+curl -fsSL https://pkg.jenkins.io/debian/jenkins.io.key | sudo tee /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+# 然后添加一个 Jenkins apt 存储库条目：
+echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+    https://pkg.jenkins.io/debian binary/ | sudo tee \
+    /etc/apt/sources.list.d/jenkins.list > /dev/null
+# 更新本地包索引，然后最后安装 Jenkins：
+sudo apt-get update
+sudo apt-get install fontconfig openjdk-11-jre
+sudo apt-get install jenkins
+```
+
+
 ## 插件
 * Localization: Chinese (Simplified)
 * Localization Support Plugin

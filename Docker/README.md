@@ -2,6 +2,7 @@
 * [Docker run 参数解析](#docker-run)
 * [Mac下docker访问主机服务](#MacDocker)
 * [docker 构建镜像并推送](#Dockerfile-push)
+* [docker去掉sudo权限](#Docker-rmsudo)
 
 ## <a id="Docker">Docker Command</a>
 
@@ -80,14 +81,6 @@ docker volume rm $(docker volume ls -qf dangling=true)
 
 # 删除所有dangling镜像（即无tag的镜像）
 docker rmi $(docker images | grep "^<none>" | awk "{print $3}")
-
-# 设置Docker作为非root用户
-## 1.创建用户组 docker
-sudo groupadd docker
-## 2.添加当前用户进 docker用户组
-sudo usermod -aG docker $USER
-## 3.重新登录用户，如果是虚拟机需要重启虚拟机
-
 ```
 ## <a id="docker-run">Docker run 参数解析</a>
 * -a stdin: 指定标准输入输出内容类型，可选 STDIN/STDOUT/STDERR 三项
@@ -132,3 +125,18 @@ docker push [registryName]:[version]
 docker push registry.cn-hangzhou.aliyuncs.com/marhal/nginx:latest
 ```
 
+
+
+## <a id="Docker-rmsudo">docker去掉sudo权限</a>
+```bash
+## 1.创建用户组 docker
+sudo groupadd docker
+## 2.添加当前用户进 docker用户组
+sudo usermod -aG docker $USER
+# 或者 sudo gpasswd -a ${USER} docker
+## 3.增加读写权限
+sudo chmod a+rw /var/run/docker.sock
+## 4.重启docker
+sudo systemctl restart docker 
+## 5.重新登录用户，如果是虚拟机需要重启虚拟机
+```
