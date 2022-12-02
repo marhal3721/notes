@@ -1,0 +1,48 @@
+ps aux | less
+ 1066  top
+ 1067  free -h
+ 1068  sudo apt-get install nethogs
+ 1069  ip addr
+ 1070  nethogs eth1 -d 5
+ 1071  nethogs --help
+ 1072  nethogs --helpeth0 -d 5
+ 1073  nethogs eth0 -d 5
+ 1074  qut
+ 1075  tcpdump -i eth0
+ 1076  q
+ 1077  tcpdump -i eth0 -vv
+ 1078  netstat -ntlp
+ 1079  tcpdump -i eth0 -vv
+ 1080  netstat -ntlp
+ 1081  telnet 8.143.253.242 3306
+ 1082  who
+ 1083  mysql -uxfgshm_admin 8.143.253.242 3306
+ 1084  mysql -uxfgshm_admin 8.143.253.242 
+ 1085  mysql -uxfgshm_admin 8.143.253.242 -p
+ 1086  exit
+ 1087  cd /www/wwwroot/shm-crmeb-pro/runtime/lucky/2022-11-04
+ 1088  netstat -nap | grep 2826568
+ 1089  mysql rm-8vbjql5nrk5p11j2yxo.mysql.zhangbei.rds.aliyuncs.com -uxfgshm_admin -p 
+ 1090  mysql -h rm-8vbjql5nrk5p11j2yxo.mysql.zhangbei.rds.aliyuncs.com -uxfgshm_admin -p 
+ 1091  ls
+ 1092  cd /var/log/
+ 1093  ls
+ 1094  less messages
+ 1095  cd /var/log/mess
+ 1096  cd /var/log/
+ 1097  ls
+ 1098  tail messages
+ 1099  tail -f messages
+ 1100  tail -f faillog 
+ 1101  df -h
+ 1102  cd /var/log/
+ 1103  ls
+ 1104  tail -f messages
+ 1105  ps -ef
+ 1106  history
+ 1107  top
+ 1108  history
+ 1109  exit
+ 1110  htop
+ 1111  netstat
+ 1112  history

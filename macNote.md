@@ -23,6 +23,10 @@ nc -vz -w 2 127.0.0.1[ip] 80[port]
 ## 安装brew
 ```bash
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+echo '# Set PATH, MANPATH, etc., for Homebrew.' >> /Users/marhal/.zprofile
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> /Users/marhal/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"
 ```
 
 ## 安装redis 后面@接版本号可指定版本
