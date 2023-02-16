@@ -12,6 +12,8 @@
     - [撤销远程push](#撤销远程push)
     - [Git添加秘钥](#Git添加秘钥)
     - [Git同时推送到多个仓库](#gitPushMoreRepository)
+    - [Git查看最后一次提交者](#lastAuthor)
+    - [Git初始化仓库](#gitInitRepository)
 
 ## <a id="git">git</a>
 
@@ -185,7 +187,20 @@ git push origin master -f
 git remote set-url --delete origin 地址
 ```
 
-* <a id="">查看最后一次提交者</a>
+* <a id="lastAuthor">查看最后一次提交者</a>
 ```bash
 git show -s --format=%an
+```
+
+* <a id="gitInitRepository">git初始化仓库</a>
+```bash
+git init
+git remote add origin https://xxxx.git
+git config --global user.email "you@example.com"
+git config --global user.name "Your Name"
+git branch --set-upstream-to=origin/master master
+git pull origin master --allow-unrelated-histories
+git add .
+git commit -m "XXXXXX"
+git push --set-upstream origin master
 ```
