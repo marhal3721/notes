@@ -1,20 +1,26 @@
-* [Linux](#Linux)
-* [win10下ubuntu子系统与windows的目录影射](#win10-Linux)
-* [win10查看端口占用](#win10-port)
-* [ubuntu时区设置](#ubuntu-date)
-* [Curl](#curl)
-* [SSH](#ssh)
-* [k8s](#k8s)
-* [NPM](#npm)
-* [virtualbox 配置ubuntu固定ip](#virtualbox-ubuntu-ip)
-* [virtualbox挂载目录](#virtualbox-ubuntu-mount)
-* [shell脚本：Syntax error: Bad for loop variable, dash转bash](#dash2bash)
-* [linux-windows 文件格式问题](#filestype)
-  * [查看文件格式](#filestype1)
-  * [docs 转 unix](#filestype2)
-* [virtualbox安装centos镜像后无网络解决](#centosvbnetwork)
-* [centos软件安装源地址](#centosrepository)
-* [ssh Error :Host key verification failed.](#HostKeyVerificationFailed)
+- [Linux Command](#linux-command)
+- [win10查看端口占用](#win10查看端口占用)
+- [win10下ubuntu子系统与windows的目录影射](#win10下ubuntu子系统与windows的目录影射)
+- [ubuntu时区设置](#ubuntu时区设置)
+- [curl](#curl)
+- [SSH](#ssh)
+- [k8s Command](#k8s-command)
+- [NPM Command](#npm-command)
+- [virtualbox 配置ubuntu固定ip](#virtualbox-配置ubuntu固定ip)
+- [virtualbox挂载目录](#virtualbox挂载目录)
+  - [在主界面设置好挂载信息](#在主界面设置好挂载信息)
+  - [命令](#命令)
+- [解决ubuntu上回环设备/dev/loop0占用100%的问题](#解决ubuntu上回环设备devloop0占用100的问题)
+- [解决virtualbox 虚拟机磁盘空间不足](#解决virtualbox-虚拟机磁盘空间不足)
+- [dash-bash](#dash-bash)
+- [linux-windows 文件格式问题](#linux-windows-文件格式问题)
+  - [查看文件格式](#查看文件格式)
+  - [docs 转 unix](#docs-转-unix)
+- [virtualbox安装镜像后无网络解决](#virtualbox安装镜像后无网络解决)
+  - [镜像下载地址](#镜像下载地址)
+- [centos软件安装源地址](#centos软件安装源地址)
+- [Host key verification failed.](#host-key-verification-failed)
+- [高版本ubuntu安装低版本php](#高版本ubuntu安装低版本php)
 
 ## <a id="Linux">Linux Command</a>
 
@@ -615,4 +621,10 @@ https://mirrors.aliyun.com/centos/8/AppStream/x86_64/os/
 ## <a id="HostKeyVerificationFailed">Host key verification failed.</a>
 ```bash
 ssh-keygen -R [ip]
+```
+
+## <a id="ubuntuinstallphp">高版本ubuntu安装低版本php</a>
+```bash
+sudo add-apt-repository ppa:ondrej/php
+sudo apt-get -y install php7.0
 ```
