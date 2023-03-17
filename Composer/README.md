@@ -1,4 +1,4 @@
-- [Composer](#Composer)
+- [Composer Command](#composer-command)
 
 ## <a id="Composer">Composer Command</a>
 
@@ -12,6 +12,14 @@ composer install --ignore-platform-reqs
 # 当 composer.json 被修改后，需要重新加载一次
 composer dump-autoload
 ```
+* 指定PHP版本运行
+
+```bash
+# 方法一：会直接改composer.json，生成相同的配置。
+composer config platform.php 7.1
+# 方法一：命令行指定只对此次有效。
+/usr/bin/php7.1 /usr/local/bin/composer update
+```  
 
 * 设置镜像
 
