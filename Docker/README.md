@@ -81,6 +81,9 @@ docker volume rm $(docker volume ls -qf dangling=true)
 
 # 删除所有dangling镜像（即无tag的镜像）
 docker rmi $(docker images | grep "^<none>" | awk "{print $3}")
+
+# 查看所有容器ip
+docker inspect --format='{{.Name}} - {{range .NetworkSettings.Networks}} - {{.IPAddress}}{{end}}' $(docker ps -aq)
 ```
 ## <a id="docker-run">Docker run 参数解析</a>
 * -a stdin: 指定标准输入输出内容类型，可选 STDIN/STDOUT/STDERR 三项
