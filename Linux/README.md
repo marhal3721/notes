@@ -21,6 +21,7 @@
 - [centos软件安装源地址](#centos软件安装源地址)
 - [Host key verification failed.](#host-key-verification-failed)
 - [高版本ubuntu安装低版本php](#高版本ubuntu安装低版本php)
+- [批量替换文件名中的指定字符](#批量替换文件名中的指定字符)
 
 ## <a id="Linux">Linux Command</a>
 
@@ -627,4 +628,9 @@ ssh-keygen -R [ip]
 ```bash
 sudo add-apt-repository ppa:ondrej/php
 sudo apt-get -y install php7.0
+```
+
+## <a id="批量替换文件名中的指定字符">批量替换文件名中的指定字符</a>
+```bash
+ ls * |awk -F "【海量资源：xxxx.com】" '{print "mv "$0" "$1$2""}'|bash
 ```

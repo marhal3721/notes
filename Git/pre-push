@@ -1,0 +1,113 @@
+#!/bin/bash
+#空格会换行，需要替换默认分隔符为换行符
+oldifs="$IFS"
+function restoreIfs() {
+  IFS="$oldifs"
+}
+
+# 排除文件
+exceptFiles=(
+api/protected/components/Controller.php
+ahuxueshu/api/protected/modules/ahuyikao/controllers/CourseController.php
+)
+
+# 判断版本号，5.5 不做cs和md
+versionResult=$(php -r "echo version_compare('5.5', phpversion(), '<') ? 1 : 0;")
+echo -e "PHPVersion:" $(php -r "echo phpversion();")
+
+# 优化：文件通过commitid取出来后统一去重，优化一个文件同时出现在多个commit的重复检测问题
+IFS=$'\n'
+fileNames=()
+echo -e "获取 commitId"
+for commitIds in $(git log @{u}.. --oneline); do
+  IFS="$oldifs"
+  commitIdArr=($commitIds)
+  #  echo ${commitIdArr[0]}
+  IFS=$'\n'
+  echo -e "获取 文件"
+  for fileName in $(git show --pretty="" --name-only --raw ${commitIdArr[0]}); do
+    fileNames+=(${fileName})
+  done
+done
+#echo ${fileNames[*]}
+if [ ${#fileNames[@]} -eq 0 ]
+then
+  echo -e "没有可检测的文件！"
+  exit 1
+fi
+
+# 数组去重
+uniqueFileNames=($(echo "${fileNames[@]}" | tr ' ' '\n' | awk '!seen[$0]++'))
+
+# 冒烟测试
+IFS=$'\n'
+for fileName in "${uniqueFileNames[@]}"; do
+  echo -e "冒烟测试 ${fileName}"
+  if cat ${fileName} | grep -E "exit|print_r|die|var_dump|echo" >/dev/null; then
+    if [[ ! "${exceptFiles[@]}" =~ $fileName ]]; then
+      echo -e ${fileName} "含有敏感字符"
+      restoreIfs
+      exit 1
+    fi
+  fi
+done
+
+# 格式检测
+uniqueFileNameStr=$(
+  IFS=$'\n'
+  echo "${uniqueFileNames[*]}"
+)
+
+if test -f api/protected/vendor/bin/phpcs; then
+  echo -e "格式检测"
+  if test -x api/protected/vendor/bin/phpcs; then
+    echo -e "权限正常"
+  else
+    chmod +x api/protected/vendor/bin/phpcs
+  fi
+  echo -e "Command: api/protected/vendor/bin/phpcs -d memory_limit=-1 --standard=PSR12 --report-full ${uniqueFileNameStr}"
+  api/protected/vendor/bin/phpcs -d memory_limit=-1 --standard=PSR12 --report-full ${uniqueFileNameStr}
+
+  if [ $? -ne 0 ]; then
+    restoreIfs
+    echo -e "格式检测失败, 建议先执行 api/protected/vendor/bin/phpcbf -d memory_limit=-1 ${uniqueFileNameStr}"
+    exit 1
+  fi
+  echo -e "格式检测 success"
+fi
+
+if test -f api/protected/vendor/bin/phpmd; then
+  echo -e "复杂度检测"
+  if test -x api/protected/vendor/bin/phpmd; then
+    echo -e "权限正常"
+  else
+    chmod +x api/protected/vendor/bin/phpmd
+  fi
+  echo -e "Command: api/protected/vendor/bin/phpmd -d memory_limit=-1 ${fileName}"
+  api/protected/vendor/bin/phpmd -d memory_limit=-1 ${fileName}
+  if [ $? -ne 0 ]; then
+    echo -e "复杂度检测失败"
+    restoreIfs
+    exit 1
+  fi
+  echo -e "复杂度检测 success"
+fi
+
+#还原系统分隔符
+restoreIfs
+
+#read_file() {
+#  #  ignoreDir=([0]="runtime",[1]="extensions",[2]="vendors")
+#
+#  for file in $(ls -a $1); do
+#    if [ -d $1"/"$file ]; then
+#      if [[ $file != '.' && $file != '..' ]]; then
+#        read_file $1"/"$file
+#      fi
+#    else
+#      echo $1"/"$file
+#    fi
+#  done
+#
+#}
+#read_file ./protected

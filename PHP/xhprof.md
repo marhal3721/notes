@@ -1,8 +1,7 @@
 ## 环境
-* ubuntu20.04
 * php7.4
 
-## 安装
+## ubuntu20.04 安装
 
 ```bash
 sudo apt-get install php-pear
@@ -21,6 +20,27 @@ sudo ln -s /etc/php/7.4/mods-available/xhprof.ini /etc/php/7.4/cli/conf.d/20-xhp
 # 检验
 php-fpm7.4 -m | grep xhprof
 php -m | grep xhprof
+```
+
+## docker 安装
+```dockerfile
+FROM registry.cn-beijing.aliyuncs.com/heplus/php-fpm-alpine:74-apcu
+COPY ./cacert.pem /usr/local/php/cacert.pem
+RUN apk add autoconf && apk add gcc g++ && apk add make && pecl install xdebug-3.1.6 && \
+    docker-php-ext-enable xdebug && \
+    docker-php-ext-install -j$(nproc) pcntl
+
+#RUN curl -sSLf \
+#            -o /usr/local/bin/install-php-extensions \
+#            https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions && \
+#        chmod +x /usr/local/bin/install-php-extensions && \
+#    install-php-extensions xhprof
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+RUN chmod +x /usr/local/bin/install-php-extensions && install-php-extensions xhprof
+#RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN curl -sS http://getcomposer.org.mirrors.china-speed.org.cn/installer | php -- --install-dir=/usr/local/bin --filename=composer
+#WORKDIR /var/www/html
+CMD ["php-fpm"]
 ```
 
 ## 配置
