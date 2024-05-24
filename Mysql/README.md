@@ -56,6 +56,8 @@ set global max_allowed_packet = 52428800(1024*1024*50)
 ```bash
 mysqldump -uroot -p  dbname tablename1 tablename2 > tablename.sql
 
+mysqldump -u devxa -p -h 127.0.0.1 --no-data --skip-lock-tables --default-character-set=utf8 --databases db1 db2 db3 > structure2.sql
+
 ```
 
 ```bash
