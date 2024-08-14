@@ -143,3 +143,12 @@ sudo chmod a+rw /var/run/docker.sock
 sudo systemctl restart docker 
 ## 5.重新登录用户，如果是虚拟机需要重启虚拟机
 ```
+
+## <a id=""></a>
+```bash
+# Error saving credentials: error storing credentials - err: exit status 1, out: `status code not OK but 500: {"message":"getting credential helper update: Post \"https://hub.docker.com/v2/users/login?refresh_token=true\": context deadline exceeded"}
+# {"message":"getting credential helper update: Post \"https://hub.docker.com/v2/users/login?refresh_token=true\": context deadline exceeded"}`
+
+
+export DOCKER_CONFIG=~/.docker-newconfig
+```
