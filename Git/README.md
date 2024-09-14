@@ -204,3 +204,33 @@ git add .
 git commit -m "XXXXXX"
 git push --set-upstream origin master
 ```
+
+* <a id="gitpushfailed">git push 失败</a>
+```bash
+#marhal@Marhal-mac docker % git push
+#Enumerating objects: 1101, done.
+#Counting objects: 100% (1101/1101), done.
+#Delta compression using up to 8 threads
+#Compressing objects: 100% (1076/1076), done.
+#remote:  内部服务错误 (654/1090)
+
+#^Riting objects:  65% (709/1090), 6.30 MiB | 1.42 MiB/ssMiB/s  
+#^Riting objects:  82% (894/1090), 7.67 MiB | 1.38 MiB/sMiB/s
+#Writing objects: 100% (1090/1090), 9.85 MiB | 1.35 MiB/s, done.
+#Total 1090 (delta 964), reused 12 (delta 6), pack-reused 0
+#fatal: the remote end hung up unexpectedly
+#error: failed to push some refs to 'https://codeup.aliyun.com/xxxx/docker.git'
+
+# 原因 推送的文件太大。
+## 解决1
+# 在克隆/创建版本库生成的 .git目录下面修改生成的config文件增加如下：
+[http]  
+postBuffer = 524288000
+
+## 解决 2
+
+$ git config http.postBuffer 524288000
+$ git config --global http.postBuffer 524288000
+$ git config --global https.postBuffer 1048576000
+$ git push
+```
